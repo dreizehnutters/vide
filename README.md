@@ -66,7 +66,7 @@ target/
             └── deep.log
 ```
 
-![demo](https://i.imgur.com/QmL7obH.mp4)
+![demo](https://github.com/dreizehnutters/assets/demo.gif)
 
 ---
 
