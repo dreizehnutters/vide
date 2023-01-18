@@ -73,7 +73,7 @@ target/
 ## Installation
 
 ```bash
-$ git clone #TODO
+$ git clone https://github.com/dreizehnutters/vide
 ```
 
 ## Requirements
