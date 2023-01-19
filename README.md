@@ -17,6 +17,9 @@ This is yet another ctf/engagement automation tool, born out of curiosity and bo
 ## Usage
 
 ```bash
+$ nmap target -oA target/nmap/init
+[...]
+
 $ tree target 
 target
 └── nmap
@@ -27,12 +30,12 @@ target
 $ ./vide -h
 usage: vide <path to dir with `nmap` folder>
        [-h]                          show this message
-       [-w]                          do [w]hatweb scan
-       [-o]                          do nikt[o] scan
-       [-i]                          do nucle[o] scan
-       [-f]                          do directory brute [f]orcing
+       [-w]                          enable [w]hatweb scan
+       [-o]                          enable nikt[o] scan
+       [-i]                          enable nucle[o] scan
+       [-f]                          enable directory brute [f]orcing
        [-d]                          [d]isable screenshotting
-       [-p <path to webservers.txt>] [p]ass list of web servers
+       [-p <path to webservers.txt>] [p]ass list of servers to process <PROTO>://<IP>[:<PORT>]
 
 $ ./vide target -w -i -o -f
 [...]
@@ -44,7 +47,8 @@ target/
 │   ├── init.gnmap
 │   ├── init.nmap
 │   └── init.xml
-└── vide_18.01_1640
+└── vide_<DATE>
+    ├── webservers.txt
     ├── ffuf
     │   └── 127.0.0.1_9090.html
     ├── httpx
@@ -52,14 +56,12 @@ target/
     ├── nikto
     │   └── 127.0.0.1_9090.html
     ├── nuclei
-    │   └── http:
+    │   └── http
     │       └── 127.0.0.1:9090
-    │           ├── [...].md
-    │           └── tech-detect-http___127.0.0.1_9090-simplehttp.md
-    ├── screens
+    │           └── [...].md
+    ├── screenshots
     │   └── http
     │       └── 127.0.0.1_9090.pdf
-    ├── webservers.txt
     └── whatweb
         └── 127.0.0.1_9090
             ├── brief.log
@@ -82,8 +84,8 @@ $ git clone https://github.com/dreizehnutters/vide
 + `$GO_PATH/bin/httpx`
 + `/usr/bin/chromium`
 + `/usr/bin/whatweb`
-+ `/usr/bin/nikto`
 + `$GO_PATH/bin/nuclei`
++ `/usr/bin/nikto`
 + `/usr/bin/ffuf`
 ---
 
@@ -91,7 +93,7 @@ $ git clone https://github.com/dreizehnutters/vide
 
 - `httpx` 		used for web server identification
 - `chromium` 	used for taking screenshots
+- `whatweb` 	used for web server scanning
 - `nuclei` 		used for web server scanning
 - `nikto` 		used for web server scanning
 - `ffuf` 		used for directory brute forcing
-- `whatweb` 	used for web server scanning
