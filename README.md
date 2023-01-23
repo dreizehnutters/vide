@@ -31,8 +31,8 @@ $ ./vide -h
 usage: vide <path to dir with `nmap` folder>
        [-h]                          show this message
        [-w]                          enable [w]hatweb scan
+       [-i]                          enable nucle[i] scan
        [-o]                          enable nikt[o] scan
-       [-i]                          enable nucle[o] scan
        [-f]                          enable directory brute [f]orcing
        [-d]                          [d]isable screenshotting
        [-p <path to webservers.txt>] [p]ass list of servers to process <PROTO>://<IP>[:<PORT>]
@@ -91,9 +91,9 @@ $ git clone https://github.com/dreizehnutters/vide
 
 ## Features
 
-- `httpx` 		used for web server identification
-- `chromium` 	used for taking screenshots
-- `whatweb` 	used for web server scanning
-- `nuclei` 		used for web server scanning
-- `nikto` 		used for web server scanning
-- `ffuf` 		used for directory brute forcing
+- `httpx` 		[used for web server identification](https://github.com/projectdiscovery/httpx)
+- `chromium` 	[used for taking screenshots](https://github.com/chromium/chromium)
+- `whatweb` 	[used for web server scanning](https://github.com/urbanadventurer/WhatWeb)
+- `nuclei` 		[used for web server scanning](https://github.com/projectdiscovery/nuclei)
+- `nikto` 		[used for web server scanning](https://github.com/sullo/nikto)
+- `ffuf` 		[used for directory brute forcing](https://github.com/ffuf/ffuf)
