@@ -28,16 +28,16 @@ target
     └── init.xml
 
 $ ./vide -h
-usage: vide <path to dir with `nmap` folder>
+usage: vide -d <path to directory with 'nmap' folder>
        [-h]                          show this message
        [-w]                          enable [w]hatweb scan
        [-i]                          enable nucle[i] scan
        [-o]                          enable nikt[o] scan
        [-f]                          enable directory brute [f]orcing
-       [-d]                          [d]isable screenshotting
+       [-s]                          enable [s]creenshotting
        [-p <path to webservers.txt>] [p]ass list of servers to process <PROTO>://<IP>[:<PORT>]
 
-$ ./vide target -w -i -o -f
+$ ./vide -d target -woisf
 [...]
 
 $ tree target
