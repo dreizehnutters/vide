@@ -61,7 +61,7 @@ WS_FILE="$WORK_DIR/webservers.txt"
 CANDIDATES_FILE="$NMAP_PATH/host_port.txt"
 RST='\033[0m'
 BG='\033[47m'
-FG='\033[030m'
+FG='\033[0;30m'
 
 # nikto
 NIKTO_DIR="$WORK_DIR/nikto"
