@@ -1,15 +1,23 @@
 #!/bin/bash
 
-# ---= arg parse =---
+# ---= colors =---
+RST='\033[0m'
+BG='\033[47m'
+FG='\033[030m'
+UL='\e[4m'
+BD='\033[1m'
+GN='\e[32m'
+
+# ---= menu =---
 help() {
-    echo "usage: vide -d <path to directory with 'nmap' folder>
-       [-h]                          show this message
-       [-w]                          enable [w]hatweb scan
-       [-i]                          enable nucle[i] scan
-       [-o]                          enable nikt[o] scan
-       [-f]                          enable directory brute [f]orcing
-       [-s]                          enable [s]creenshotting
-       [-p <path to webservers.txt>] [p]ass list of servers to process <PROTO>://<IP>[:<PORT>]"
+    echo -e "usage: $FG$BG$(basename $BASH_SOURCE)${RST} -${BD}d${RST} <path to directory with folder called '${UL}nmap${RST}'>${RST}
+       [-${BD}h${RST}]                          show this message
+       [-${BD}w${RST}]                          enable ${UL}W${RST}hatWeb scan
+       [-${BD}i${RST}]                          enable Nucle${UL}i${RST} scan
+       [-${BD}o${RST}]                          enable Nikt${UL}o${RST} scan
+       [-${BD}f${RST}]                          enable ${UL}f${RST}fuf brute orcing
+       [-${BD}s${RST}]                          enable ${UL}s${RST}creenshotting
+       [-${BD}p${RST} <path to webservers.txt>] ${UL}p${RST}ass list of servers to process {<PROTO>://<IP>[:<PORT>]}"
     exit 2
 }
 
@@ -21,23 +29,22 @@ parse() {
     if [[ $PROTO == "https"* ]]; then
         TMP=$(echo "$1" | cut -d':' -f3-)
         PORT="${TMP:-443}"
-        DO_SSL=true
+        DO_SSL="true"
     else
         TMP=$(echo "$1" | cut -d':' -f3-)
         PORT="${TMP:-80}"
-        DO_SSL=false
     fi
     REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
 }
 
-declare DO_{SCREENSHOTS,WHATWEB,NIKTO,NUCLEI,FFUF}=false
+# ---= arg parse =---
 while getopts 'wd:iofshp:' flag; do
     case "${flag}" in
-    w) DO_WHATWEB=true ;;
-    s) DO_SCREENSHOTS=true ;;
-    i) DO_NUCLEI=true ;;
-    o) DO_NIKTO=true ;;
-    f) DO_FFUF=true ;;
+    w) DO_WHATWEB="true" ;;
+    s) DO_SCREENSHOTS="true" ;;
+    i) DO_NUCLEI="true" ;;
+    o) DO_NIKTO="true" ;;
+    f) DO_FFUF="true" ;;
     h) help ;;
     d) PROJECT_DIR="${OPTARG}" ;;
     p) OPT_WEBSERVERS_LIST="${OPTARG}" ;;
@@ -49,7 +56,7 @@ done
 
 # ---= config =---
 # globals
-VERSION=1.1
+VERSION=1.2
 timestamp=$(date +%d.%m_%H%M)
 COUNTER=1
 THREADS=40
@@ -59,9 +66,6 @@ WORK_DIR="$BASE/vide_$timestamp"
 NMAP_PATH="$BASE/nmap"
 WS_FILE="$WORK_DIR/webservers.txt"
 CANDIDATES_FILE="$NMAP_PATH/host_port.txt"
-RST='\033[0m'
-BG='\033[47m'
-FG='\033[0;30m'
 
 # nikto
 NIKTO_DIR="$WORK_DIR/nikto"
@@ -98,24 +102,22 @@ FFUF=/usr/bin/ffuf
 
 # ---= init =---
 mkdir -p "$WORK_DIR" "$HTTPX_DIR"
-[ "$DO_WHATWEB" = true ] && mkdir -p "$WW_DIR"
-[ "$DO_NIKTO" = true ] && mkdir -p "$NIKTO_DIR"
-[ "$DO_FFUF" = true ] && mkdir -p "$FFUF_DIR"
-[ "$DO_SCREENSHOTS" = true ] && mkdir -p "$SCREEN_DIR"
+[ -n "$DO_WHATWEB" ] && mkdir -p "$WW_DIR"
+[ -n "$DO_NIKTO" ] && mkdir -p "$NIKTO_DIR"
+[ -n "$DO_FFUF" ] && mkdir -p "$FFUF_DIR"
+[ -n "$DO_SCREENSHOTS" ] && mkdir -p "$SCREEN_DIR"
 
 # ---= main =----
 if $SHOW_BANNER; then
-cat <<EOF
-        _______________
+echo -e "        _______________ 
     ==c(___(o(______(_()
             \=\\
              )=\\
-            //|\\\\  ~vide~ high-level web server enumeration
-           //|| \\\\  Version: $VERSION
-          // ||  \\\\
-         //  ||   \\\\
-        //         \\\\
-EOF
+            //|\\\\\  ~vide~
+           //|| \\\\\  high-level web server enumeration
+          // ||. \\\\\ version: ${BD}${GN}${VERSION}${RST}
+        .//  ||   \\\\\ .
+        //  .      \\\\\ ."
 fi
 
 # ---= nmap parsing =---
@@ -150,7 +152,7 @@ fi
 echo -e "$FG$BG[*] found $NUM_WS web servers"
 
 # ---= take screenshots of web server =---
-if $DO_SCREENSHOTS; then
+if [ -n "$DO_SCREENSHOTS" ]; then
 echo -e "$FG$BG[*] screenshotting each server:$RST"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     echo -e "\t$FG$BG[$COUNTER/$NUM_WS] taking screenshots of: $TARGET$RST"
@@ -164,12 +166,13 @@ for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
                             --virtual-time-budget="$DOM_DELAY" \
                             --print-to-pdf="$SCREEN_DIR/$PROTO/$FILE_NAME.pdf" "$PROTO://$TMP_TARGET/" 2>/dev/null
     let COUNTER++
+    unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
 COUNTER=1
 fi
 
 # ---= scan server tech/headers =---
-if $DO_WHATWEB; then
+if [ -n "$DO_WHATWEB" ]; then
 echo -e "$FG$BG[*] WhatWeb tech scans:$RST"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     parse $TARGET
@@ -177,12 +180,13 @@ for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     mkdir -p "$WW_DIR/$FILE_NAME"
     $WW -v -a 3 "$TARGET" --log-verbose="$WW_DIR/$FILE_NAME/deep.log" --max-threads="$THREADS" | tee "$WW_DIR/$FILE_NAME/brief.log"
     let COUNTEI++
+    unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
 COUNTER=1
 fi
 
 # ---= deploy nuclei scans =---
-if $DO_NUCLEI; then
+if [ -n "$DO_NUCLEI" ]; then
 echo -e "$FG$BG[*] nuclei scans:$RST"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     echo -e "\t$FG$BG[$COUNTER/$NUM_WS] full template scan of: $TARGET$RST"
@@ -193,31 +197,31 @@ COUNTER=1
 fi
 
 # ---= deploy nikto scans =---
-if $DO_NIKTO; then
+if [ -n "$DO_NIKTO" ]; then
 echo -e "$FG$BG[*] nikto scans:$RST"
-TMP_file=tmp_file.txt
-touch $TMP_file
+touch "${TMP_file:=tmp_file.txt}"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     parse $TARGET
     if grep -Fxq "$IP:$PORT" $TMP_file; then
         continue
     else
-        if $DO_SSL; then
-            echo "n" | $NIKTO -no404 -host "$IP:$PORT" -Tuning x567 -port "$PORT" -ssl -Format htm -output "$NIKTO_DIR/$FILE_NAME.html"
+        if [ -n "$DO_SSL" ]; then
+            SSL_FLAG="-ssl"
         else
-            echo "n" | $NIKTO -no404 -host "$IP:$PORT" -Tuning x567 -port "$PORT" -nossl -Format htm -output "$NIKTO_DIR/$FILE_NAME.html"
+            SSL_FLAG="-nossl"
         fi
+        echo "n" | $NIKTO -no404 -host "$PROTO://$IP:$PORT" -Tuning x567 "$SSL_FLAG" -Format htm -output "$NIKTO_DIR/$FILE_NAME.html"
         echo "$IP:$PORT" >> $TMP_file
     fi
+    unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
 rm -f $TMP_file
 fi
 
 # ---= directory brute force =---
-if $DO_FFUF; then
+if [ -n "$DO_FFUF" ]; then
 echo -e "$FG$BG[*] FFUF dir brute force:$RST"
-TMP_file=tmp_file.txt
-touch $TMP_file
+touch "${TMP_file:=tmp_file.txt}"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     parse $TARGET
     if grep -Fxq "$IP:$PORT" $TMP_file; then
@@ -226,6 +230,7 @@ for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
         $FFUF -u "$PROTO://$IP:$PORT/FUZZ" -w "$WORDLIST" -mc all -ac -c -t "$THREADS" -of html -o "$FFUF_DIR/$FILE_NAME.html"
         echo "$IP:$PORT" >> $TMP_file
     fi
+    unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 
 done
 rm -f $TMP_file

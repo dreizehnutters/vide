@@ -28,14 +28,14 @@ target
     └── init.xml
 
 $ ./vide -h
-usage: vide -d <path to directory with 'nmap' folder>
+usage: vide.sh -d <path to directory with folder called 'nmap'>
        [-h]                          show this message
-       [-w]                          enable [w]hatweb scan
-       [-i]                          enable nucle[i] scan
-       [-o]                          enable nikt[o] scan
-       [-f]                          enable directory brute [f]orcing
-       [-s]                          enable [s]creenshotting
-       [-p <path to webservers.txt>] [p]ass list of servers to process <PROTO>://<IP>[:<PORT>]
+       [-w]                          enable WhatWeb scan
+       [-i]                          enable Nuclei scan
+       [-o]                          enable Nikto scan
+       [-f]                          enable ffuf brute orcing
+       [-s]                          enable screenshotting
+       [-p <path to webservers.txt>] pass list of servers to process {<PROTO>://<IP>[:<PORT>]}
 
 $ ./vide -d target -woisf
 [...]
