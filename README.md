@@ -1,16 +1,15 @@
 # vide
 
 Automatically search for web servers in `.xml` results of `nmap` data and lightly scan them using `nikto`, `nuclei`, `whatweb` or `ffuf` and also take screenshots using `chromium`
-
         _______________
     ==c(___(o(______(_()
             \=\
              )=\
-            //|\\   ~vide~ high-level web server enumeration
-           //|| \\  
-          // ||  \\
-         //  ||   \\
-        //         \\
+            //|\\  ~vide~
+           //|| \\  high-level web server enumeration
+          // ||. \\ version: 1.2
+        .//  ||   \\ .
+        //  .      \\ 
 
 This is yet another ctf/engagement automation tool, born out of curiosity and boredom
 
@@ -27,7 +26,7 @@ target
     ├── init.nmap
     └── init.xml
 
-$ ./vide -h
+$ vide.sh -h
 usage: vide.sh -d <path to directory with folder called 'nmap'>
        [-h]                          show this message
        [-w]                          enable WhatWeb scan
@@ -37,7 +36,7 @@ usage: vide.sh -d <path to directory with folder called 'nmap'>
        [-s]                          enable screenshotting
        [-p <path to webservers.txt>] pass list of servers to process {<PROTO>://<IP>[:<PORT>]}
 
-$ ./vide -d target -woisf
+$ vide.sh -d target -woisf
 [...]
 
 $ tree target

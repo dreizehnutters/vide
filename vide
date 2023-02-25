@@ -82,6 +82,7 @@ RATE_LIMIT=100
 
 # whatweb
 WW_DIR="$WORK_DIR/whatweb"
+WHATWEB_LEVEL=3
 
 # nuclei
 NUCLEI_DIR="$WORK_DIR/nuclei"
@@ -109,7 +110,7 @@ mkdir -p "$WORK_DIR" "$HTTPX_DIR"
 
 # ---= main =----
 if $SHOW_BANNER; then
-echo -e "        _______________ 
+echo -e "        _______________
     ==c(___(o(______(_()
             \=\\
              )=\\
@@ -117,7 +118,7 @@ echo -e "        _______________
            //|| \\\\\  high-level web server enumeration
           // ||. \\\\\ version: ${BD}${GN}${VERSION}${RST}
         .//  ||   \\\\\ .
-        //  .      \\\\\ ."
+        //  .      \\\\\ "
 fi
 
 # ---= nmap parsing =---
@@ -178,10 +179,11 @@ for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     parse $TARGET
     echo -e "\t$FG$BG[$COUNTER/$NUM_WS] WhatWeb scan of: $TARGET$RST"
     mkdir -p "$WW_DIR/$FILE_NAME"
-    $WW -v -a 3 "$TARGET" --log-verbose="$WW_DIR/$FILE_NAME/deep.log" --max-threads="$THREADS" | tee "$WW_DIR/$FILE_NAME/brief.log"
-    let COUNTEI++
+    $WW --aggression=$WHATWEB_LEVEL "$TARGET" --log-verbose="$WW_DIR/$FILE_NAME/deep.log" --log-brief="$WW_DIR/$FILE_NAME/brief.log" --max-threads="$THREADS"
+    let COUNTER++
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
+for x in brief deep; do find "$WW_DIR" -type f -name "${x}.log" -exec cat {} >>"$WW_DIR/${x}_all.log" +;done
 COUNTER=1
 fi
 
@@ -191,7 +193,7 @@ echo -e "$FG$BG[*] nuclei scans:$RST"
 for TARGET in $(grep -v "#" "$WS_FILE" | sort -V); do
     echo -e "\t$FG$BG[$COUNTER/$NUM_WS] full template scan of: $TARGET$RST"
     $NUCLEI -ud "$NUCLEI_TEMPLATES" -u "$TARGET" -ni -i "$IFACE" -irr -stats -timeout 5 -markdown-export "$NUCLEI_DIR"/"$TARGET"
-    let COUNTEI++
+    let COUNTER++
 done
 COUNTER=1
 fi
