@@ -1,6 +1,7 @@
 # vide
 
 Automatically search for web servers in `.xml` results of `nmap` data and lightly scan them using `nikto`, `nuclei`, `whatweb` or `ffuf` and also take screenshots using `chromium`
+```
         _______________
     ==c(___(o(______(_()
             \=\
@@ -10,7 +11,7 @@ Automatically search for web servers in `.xml` results of `nmap` data and lightl
           // ||. \\ version: 1.2
         .//  ||   \\ .
         //  .      \\ 
-
+```
 This is yet another ctf/engagement automation tool, born out of curiosity and boredom
 
 ## Usage
