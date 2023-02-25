@@ -69,7 +69,6 @@ target/
 ```
 
 ![demo](https://github.com/dreizehnutters/vide/blob/main/assets/demo.gif)
-
 ---
 
 ## Installation
@@ -80,20 +79,20 @@ $ git clone https://github.com/dreizehnutters/vide
 
 ## Requirements
 
-+ `/usr/bin/xmlstarlet`
-+ `$GO_PATH/bin/httpx`
-+ `/usr/bin/chromium`
-+ `/usr/bin/whatweb`
-+ `$GO_PATH/bin/nuclei`
-+ `/usr/bin/nikto`
-+ `/usr/bin/ffuf`
++ `/usr/bin/xmlstarlet` >= `1.6.1`
++ `$GO_PATH/bin/httpx` >= `1.2.5`
++ `/usr/bin/chromium` >= `110`
++ `/usr/bin/whatweb` >= `0.5.5`
++ `$GO_PATH/bin/nuclei` >= `2.8.9`
++ `/usr/bin/nikto` >= `2.5.0`
++ `/usr/bin/ffuf` >= `2.0.0`
 ---
 
 ## Features
 
-- `httpx` 		[used for web server identification](https://github.com/projectdiscovery/httpx)
+- `httpx` 	[used for web server identification](https://github.com/projectdiscovery/httpx)
 - `chromium` 	[used for taking screenshots](https://github.com/chromium/chromium)
 - `whatweb` 	[used for web server scanning](https://github.com/urbanadventurer/WhatWeb)
-- `nuclei` 		[used for web server scanning](https://github.com/projectdiscovery/nuclei)
-- `nikto` 		[used for web server scanning](https://github.com/sullo/nikto)
-- `ffuf` 		[used for directory brute forcing](https://github.com/ffuf/ffuf)
+- `nuclei` 	[used for web server scanning](https://github.com/projectdiscovery/nuclei)
+- `nikto` 	[used for web server scanning](https://github.com/sullo/nikto)
+- `ffuf` 	[used for directory brute forcing](https://github.com/ffuf/ffuf)
