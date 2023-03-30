@@ -112,7 +112,7 @@ $ vide.sh --check
 ## Features
 - `xmlstarlet` >= `1.6.1` [used for XML parsing](https://xmlstar.sourceforge.net)
 - `httpx` >= `1.2.5` 	[used for web server identification](https://github.com/projectdiscovery/httpx)
-- `goverview` >= `1.0.1	[used for taking screenshots](https://github.com/j3ssie/goverview)
+- `goverview` >= `1.0.1`	[used for taking screenshots](https://github.com/j3ssie/goverview)
 - `whatweb` >= `0.5.5`	[used for web server scanning](https://github.com/urbanadventurer/WhatWeb)
 - `nuclei` >= `2.8.9` 	[used for web server scanning](https://github.com/projectdiscovery/nuclei)
 - `nikto` >= `2.5.0` 	[used for web server scanning](https://github.com/sullo/nikto)
