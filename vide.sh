@@ -24,8 +24,8 @@ help() {
                   [-${BD}ka${RST}]                      enable ${FBU}ka${RST}tana crwal
                   [-${BD}by${RST}]                      enable ${FBU}by${RST}pass (40X) scans
                   [-${BD}p${RST} <path to webservers>]  ${FBU}p${RST}ass list of servers to process {<PROTO>://<IP>[:<PORT>]}
-                  [-${BD}c${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n"
-                  [--${BD}check${RST}]                  verify configuration file (default: config.sh)
+                  [-${BD}c${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n
+                  [--${BD}check${RST}]                  verify configuration file (default: config.sh)\n"
 
     exit 2
 }
