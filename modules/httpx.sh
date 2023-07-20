@@ -22,7 +22,7 @@ fi
 NUM_WS=$(wc -l "$TARGETS_FILE" | cut -d' ' -f1)
 if [ "$NUM_WS" == "0" ]; then
     printf "${EP}no web servers found.\n"
-    exit 1
+    [[ -n $DO_NMAP ]] && echo "" || exit 1
 fi
 
 printf "$OP${IN}found $BD$NUM_WS$RST$IN web servers$RST\n"

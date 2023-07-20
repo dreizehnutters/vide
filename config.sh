@@ -17,9 +17,9 @@ KATANA=$HOME/.pdtm/go/bin/katana
 # ---= check =---
 if [ -n "$CHECK" ]; then
  	GIT_REL="$(git log --format='%h %ci' -1 2>/dev/null | awk '{ print $1" "$2" "$3 }')"
-	echo "running build $GIT_REL"
+	printf "running build ${BD}$GIT_REL${RST}\n"
 	SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-	printf "checking $SCRIPTPATH/config.sh\n"
+	printf "checking config: $SCRIPTPATH/config.sh\n"
 	# ---= path =---
 	if [  -n "$HOME" ];			then printf "${OP}${BD}HOME${RST}	is set to '$HOME'\n"; 		else printf "${EP}${BD}HOME${RST} not exported.\n"; fi
 	if [  -n "$GO_PATH" ];		then printf "${OP}${BD}GO_PATH${RST}	is set to '$GO_PATH'\n"; 	else printf "${EP}${BD}GO_PATH${RST} not exported.\n"; fi
@@ -48,12 +48,7 @@ COUNTER=1
 THREADS=40
 SCAN_HEADER="github.com/dreizehnutters/vide"
 NMAP_PATH="$PROJECT_DIR/nmap"
-if [[ -n $OUT_DIR ]] ;then
-	PROJECT_DIR=$OUT_DIR
-else
-	OUT_DIR=$PROJECT_DIR
-fi
-
+[[ -n $OUT_DIR ]] && PROJECT_DIR=$OUT_DIR || echo OUT_DIR=$PROJECT_DIR
 WORK_DIR="$PROJECT_DIR/vide_$timestamp"
 WS_FILE="$WORK_DIR/webservers.txt"
 HTTPS_SERVERS="$WORK_DIR/https_servers.txt"

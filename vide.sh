@@ -12,7 +12,7 @@ fi
 # ---= menu =--- TODO
 help() {
     printf "\
-    usage: $IN$(basename $BASH_SOURCE)${RST} -${BD}d${RST} <path to directory with folder called '${UL}nmap${RST}'>${RST}
+    usage: ./$IN$(basename $BASH_SOURCE)${RST} -${BD}d${RST} <path to directory containing folder called '${UL}nmap${RST}'>${RST}
                   [-${BD}h${RST}]                       show this message
                   [-${BD}wh${RST}]                      enable ${FBU}Wh${RST}hatweb scans
                   [-${BD}wa${RST}]                      enable ${FBU}Wa${RST}banalyze scans
@@ -23,10 +23,12 @@ help() {
                   [-${BD}sc${RST}]                      enable ${FBU}sc${RST}reenshotting
                   [-${BD}ka${RST}]                      enable ${FBU}ka${RST}tana crwal
                   [-${BD}by${RST}]                      enable ${FBU}by${RST}pass (40X) scans
-                  [-${BD}p${RST} <path to webservers>]  ${FBU}p${RST}ass list of servers to process {<PROTO>://<IP>[:<PORT>]}
-                  [-${BD}c${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n
-                  [--${BD}out-dir${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n
+                  [--${BD}servers${RST} <servers.txt>]  pass list of ${FBU}s${RST}ervers to process {[<PROTO>://]<IP>[:<PORT>]}
+                  [--${BD}config${RST} <config.sh>]     ${FBU}c${RST}onfig file to pass (default: vide.cfg)
+                  [--${BD}out-dir${RST} <path>]         ${FBU}o${RST}ut-dir to write to (default: $PWD)
                   [--${BD}check${RST}]                  verify configuration file (default: config.sh)\n"
+    printf "\
+    example: ./${IN}$(basename $BASH_SOURCE) -d /root/audit_results -nm -wh -sc --out-dir /root/audit_results${RST}\n"
 
     exit 2
 }
@@ -52,8 +54,8 @@ while [[ $# -gt 0 ]]; do
     --check) CHECK_INSTALL="true";;
     -d|--project-dir) PROJECT_DIR="$2"; shift;;
     -o|--out-dir) OUT_DIR="$2"; shift;;
-    -p|--opt-webservers-list) OPT_WEBSERVERS_LIST="$2"; shift;;
-    -c|--custom-config) USE_CC="true";CUSTOM_CONFIG="$2"; shift;;
+    -s|--servers) OPT_WEBSERVERS_LIST="$2"; shift;;
+    -c|--config) USE_CC="true";CUSTOM_CONFIG="$2"; shift;;
     -h|--help) help; exit 0;;
     *) echo "Unknown option: $1"; exit 1;;
   esac
