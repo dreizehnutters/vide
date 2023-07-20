@@ -4,6 +4,8 @@ XMLS=/usr/bin/xmlstarlet
 NIKTO=/usr/bin/nikto
 WW=/usr/bin/whatweb
 WA=/usr/local/bin/webanalyze
+SMBMAP=/usr/bin/smbmap
+ENUM4LINUX=$SCRIPTPATH/modules/enum4linux-ng.py
 GVV=$GO_PATH/bin/goverview
 FFUF=$GO_PATH/bin/ffuf
 BYP4=$GO_PATH/bin/byp4xx
@@ -19,21 +21,23 @@ if [ -n "$CHECK" ]; then
 	SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 	printf "checking $SCRIPTPATH/config.sh\n"
 	# ---= path =---
-	if [  -n "$HOME" ];		then printf "${OP}${BD}HOME${RST}	set ($HOME)\n"; 		else printf "${EP}${BD}HOME${RST} not exported.\n"; fi
-	if [  -n "$GO_PATH" ];	then printf "${OP}${BD}GO_PATH${RST}	set ($GO_PATH)\n"; 	else printf "${EP}${BD}GO_PATH${RST} not exported.\n"; fi
+	if [  -n "$HOME" ];			then printf "${OP}${BD}HOME${RST}	is set to '$HOME'\n"; 		else printf "${EP}${BD}HOME${RST} not exported.\n"; fi
+	if [  -n "$GO_PATH" ];		then printf "${OP}${BD}GO_PATH${RST}	is set to '$GO_PATH'\n"; 	else printf "${EP}${BD}GO_PATH${RST} not exported.\n"; fi
 	printf -- '-%.0s' {1..35}; printf "\n"
 	# ---= bins =---
-	if [  -f "$NMAP" ];		then printf "${OP}${BD}nmap${RST}	is installed.\n"; 		else printf "${EP}${BD}nmap${RST}	not found under: $NMAP\n"; fi
-	if [  -f "$XMLS" ];		then printf "${OP}${BD}xmlstarlet${RST}	is installed.\n"; 	else printf "${EP}${BD}xmlstarlet${RST}	not found under: $XMLS\n"; fi
-	if [  -f "$NIKTO" ];	then printf "${OP}${BD}nikto${RST}	is installed.\n"; 		else printf "${EP}${BD}nikto${RST}	not found under: $NIKTO\n"; fi
-	if [  -f "$WW" ];		then printf "${OP}${BD}WhatWeb${RST}	is installed.\n"; 	else printf "${EP}${BD}WhatWeb${RST}	not found under: $WW\n"; fi
-	if [  -f "$GVV" ];		then printf "${OP}${BD}goverview${RST}	is installed.\n"; 	else printf "${EP}${BD}goverview${RST}	not found under: $GVV\n"; fi
-	if [  -f "$FFUF" ];		then printf "${OP}${BD}ffuf${RST}	is installed.\n"; 		else printf "${EP}${BD}ffuf${RST}	not found under: $FFUF\n"; fi
-	if [  -f "$BYP4" ];		then printf "${OP}${BD}byp4xx${RST}	is installed.\n"; 		else printf "${EP}${BD}byp4xx${RST}	not found under: $BYP4\n"; fi
-	if [  -f "$SUBJS" ];	then printf "${OP}${BD}subjs${RST}	is installed.\n"; 		else printf "${EP}${BD}subjs${RST}	not found under: $SUBJS\n"; fi
-	if [  -f "$HTTPX" ];	then printf "${OP}${BD}httpx${RST}	is installed.\n"; 		else printf "${EP}${BD}httpx${RST}	not found under: $HTTPX\n"; fi
-	if [  -f "$NUCLEI" ];	then printf "${OP}${BD}nuclei${RST}	is installed.\n"; 		else printf "${EP}${BD}nuclei${RST}	not found under: $NUCLEI\n"; fi
-	if [  -f "$KATANA" ];	then printf "${OP}${BD}katana${RST}	is installed.\n"; 		else printf "${EP}${BD}katana${RST}	not found under: $KATANA\n"; fi
+	if [  -f "$NMAP" ];			then printf "${OP}${BD}nmap${RST}	is installed.\n"; 		else printf "${EP}${BD}nmap${RST}	not found under: $NMAP\n"; fi
+	if [  -f "$XMLS" ];			then printf "${OP}${BD}xmlstarlet${RST}	is installed.\n"; 	else printf "${EP}${BD}xmlstarlet${RST}	not found under: $XMLS\n"; fi
+	if [  -f "$NIKTO" ];		then printf "${OP}${BD}nikto${RST}	is installed.\n"; 		else printf "${EP}${BD}nikto${RST}	not found under: $NIKTO\n"; fi
+	if [  -f "$WW" ];			then printf "${OP}${BD}WhatWeb${RST}	is installed.\n"; 	else printf "${EP}${BD}WhatWeb${RST}	not found under: $WW\n"; fi
+	if [  -f "$GVV" ];			then printf "${OP}${BD}goverview${RST}	is installed.\n"; 	else printf "${EP}${BD}goverview${RST}	not found under: $GVV\n"; fi
+	if [  -f "$FFUF" ];			then printf "${OP}${BD}ffuf${RST}	is installed.\n"; 		else printf "${EP}${BD}ffuf${RST}	not found under: $FFUF\n"; fi
+	if [  -f "$BYP4" ];			then printf "${OP}${BD}byp4xx${RST}	is installed.\n"; 		else printf "${EP}${BD}byp4xx${RST}	not found under: $BYP4\n"; fi
+	if [  -f "$SUBJS" ];		then printf "${OP}${BD}subjs${RST}	is installed.\n"; 		else printf "${EP}${BD}subjs${RST}	not found under: $SUBJS\n"; fi
+	if [  -f "$HTTPX" ];		then printf "${OP}${BD}httpx${RST}	is installed.\n"; 		else printf "${EP}${BD}httpx${RST}	not found under: $HTTPX\n"; fi
+	if [  -f "$NUCLEI" ];		then printf "${OP}${BD}nuclei${RST}	is installed.\n"; 		else printf "${EP}${BD}nuclei${RST}	not found under: $NUCLEI\n"; fi
+	if [  -f "$KATANA" ];		then printf "${OP}${BD}katana${RST}	is installed.\n"; 		else printf "${EP}${BD}katana${RST}	not found under: $KATANA\n"; fi
+	if [  -f "$SMBMAP" ];		then printf "${OP}${BD}smbmap${RST}	is installed.\n"; 		else printf "${EP}${BD}smbmap${RST}	not found under: $SMBMAP\n"; fi
+	if [  -f "$ENUM4LINUX" ];	then printf "${OP}${BD}enum4linux${RST}	is installed.\n"; 		else printf "${EP}${BD}enum4linux-ng${RST}	not found under: $ENUM4LINUX\n"; fi
 	exit 0
 fi
 
@@ -43,13 +47,20 @@ timestamp=$(date +%d.%m_%H%M)
 COUNTER=1
 THREADS=40
 SCAN_HEADER="github.com/dreizehnutters/vide"
-WORK_DIR="$PROJECT_DIR/vide_$timestamp"
 NMAP_PATH="$PROJECT_DIR/nmap"
+if [[ -n $OUT_DIR ]] ;then
+	PROJECT_DIR=$OUT_DIR
+else
+	OUT_DIR=$PROJECT_DIR
+fi
+
+WORK_DIR="$PROJECT_DIR/vide_$timestamp"
 WS_FILE="$WORK_DIR/webservers.txt"
 HTTPS_SERVERS="$WORK_DIR/https_servers.txt"
 HTTP_SERVERS="$WORK_DIR/http_server.txt"
 CANDIDATES_FILE="$NMAP_PATH/host_port.txt"
 NMAP_PARSE="$NMAP_PATH/parsed.txt"
+printf "${OP}${BD}working${RST} in $WORK_DIR\n"
 mkdir -p "$WORK_DIR"
 
 

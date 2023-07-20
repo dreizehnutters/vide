@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+SCRIPTPATH="$(dirname $(realpath "$0"))"
 
 if [ -f "$SCRIPTPATH/colors.sh" ]; then
     . "$SCRIPTPATH"/colors.sh
@@ -25,6 +25,7 @@ help() {
                   [-${BD}by${RST}]                      enable ${FBU}by${RST}pass (40X) scans
                   [-${BD}p${RST} <path to webservers>]  ${FBU}p${RST}ass list of servers to process {<PROTO>://<IP>[:<PORT>]}
                   [-${BD}c${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n
+                  [--${BD}out-dir${RST} <path to config>]      ${FBU}c${RST}onfig file to pass (default: vide.cfg)\n
                   [--${BD}check${RST}]                  verify configuration file (default: config.sh)\n"
 
     exit 2
@@ -50,6 +51,7 @@ while [[ $# -gt 0 ]]; do
     --https) HTTPS_ONLY="true";;
     --check) CHECK_INSTALL="true";;
     -d|--project-dir) PROJECT_DIR="$2"; shift;;
+    -o|--out-dir) OUT_DIR="$2"; shift;;
     -p|--opt-webservers-list) OPT_WEBSERVERS_LIST="$2"; shift;;
     -c|--custom-config) USE_CC="true";CUSTOM_CONFIG="$2"; shift;;
     -h|--help) help; exit 0;;
@@ -143,7 +145,7 @@ if [ -z "$OPT_WEBSERVERS_LIST" ]; then
                 -n "$NMAP_PATH"/*.xml | sort -u -V > "$NMAP_PARSE"
 
     rm -rf $CANDIDATES_FILE
-    sort -t'#' -k3rn $NMAP_PARSE | awk -F'#' '!a[$1,$2,$4]++' > "tmp"
+    sort -t'#' -k3rn $NMAP_PARSE | awk -F'#' '!a[$1,$2,$4]++' | sort -V > "tmp"
     mv "tmp" $NMAP_PARSE
     for f in $(cat $NMAP_PARSE); do
         dissect $f

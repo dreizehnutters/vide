@@ -63,6 +63,12 @@ if [[ "$PORT" = 79 ]]; then
      --scan-delay $DELAY -oA $OUT_PATH
 fi
 
+if [[ "$PORT" = 80 ]]; then
+     sudo $NMAP $IP -Pn -n --open -p80 --script-timeout 20s \
+     --script='*http*' -g $PORT \
+     --scan-delay $DELAY -oA $OUT_PATH
+fi
+
 if [[ "$PORT" = 102 ]]; then
      sudo $NMAP $IP -Pn -n --open -p102 --script-timeout 20s \
      --script=s7-info -g $PORT \
@@ -93,15 +99,25 @@ if [[ "$PORT" = 123 ]]; then
      --scan-delay $DELAY -oA $OUT_PATH
 fi
 
+if [[ "$PORT" = 135 ]]; then
+     sudo $NMAP $IP -Pn -n -sU --open -p135 --script-timeout 20s \
+     --script=nbstat -g $PORT \
+     --scan-delay $DELAY -oA $OUT_PATH
+
+     $ENUM4LINUX $IP | tee $NMAP_DIR/enum4linux.txt
+fi
+
 if [[ "$PORT" = 137 ]]; then
      sudo $NMAP $IP -Pn -n -sU --open -p137 --script-timeout 20s \
      --script=nbstat -g $PORT \
      --scan-delay $DELAY -oA $OUT_PATH
+
+     nmblookup -A $IP | tee $NMAP_DIR/nmblookup.txt
 fi
 
 if [[ "$PORT" = 139 ]]; then
      sudo $NMAP $IP -Pn -n --open -p139 --script-timeout 20s \
-     --script=smb-vuln-cve-2017-7494,smb-vuln-ms10-061,smb-vuln-ms17-010 -g $PORT \
+     --script='*rpc*' -g $PORT \
      --scan-delay $DELAY -oA $OUT_PATH
 fi
 
@@ -123,10 +139,20 @@ if [[ "$PORT" = 389 ]]; then
      --scan-delay $DELAY -oA $OUT_PATH
 fi
 
+if [[ "$PORT" = 443 ]]; then
+     sudo $NMAP $IP -Pn -n --open -p443 --script-timeout 20s \
+     --script='*http*' -g $PORT \
+     --scan-delay $DELAY -oA $OUT_PATH
+fi
+
 if [[ "$PORT" = 445 ]]; then
      sudo $NMAP $IP -Pn -n --open -p445 --script-timeout 20s \
-     --script=smb-double-pulsar-backdoor,smb-enum-domains,smb-enum-groups,smb-enum-processes,smb-enum-services,smb-enum-sessions,smb-enum-shares,smb-enum-users,smb-mbenum,smb-os-discovery,smb-protocols,smb-security-mode,smb-server-stats,smb-system-info,smb2-capabilities,smb2-security-mode,smb2-time,msrpc-enum,stuxnet-detect -g $PORT \
+     --script='smb-enum*' -g $PORT \
      --scan-delay $DELAY -oA $OUT_PATH
+
+     $SMBMAP -H $IP -u '' -p '' -r --dir-only --no-write-check | tee $NMAP_DIR/smb_zero.txt
+     $SMBMAP -H $IP -u 'GEBW4$h3r3' -p '' -r --dir-only --no-write-check | tee $NMAP_DIR/smb_null.txt
+
 fi
 
 if [[ "$PORT" = 500 ]]; then
