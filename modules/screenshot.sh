@@ -4,7 +4,6 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
     l2 "taking screenshots of"
     parse $TARGET
     mkdir -p "$SCREEN_DIR/$PROTO"
-    # cd "$SCREEN_DIR/$PROTO"
     echo "$TARGET/" | $GVV screen --timeout $SS_TIMEOUT -L -R -o "$SCREEN_DIR/$PROTO" &>/dev/null
     let COUNTER++
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}

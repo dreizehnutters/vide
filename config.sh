@@ -5,7 +5,7 @@ NIKTO=/usr/bin/nikto
 WW=/usr/bin/whatweb
 WA=/usr/local/bin/webanalyze
 SMBMAP=/usr/bin/smbmap
-ENUM4LINUX=$SCRIPTPATH/modules/enum4linux-ng.py
+ENUM4LINUX=$PY_PATH/enum4linux-ng.py
 GVV=$GO_PATH/bin/goverview
 FFUF=$GO_PATH/bin/ffuf
 BYP4=$GO_PATH/bin/byp4xx
@@ -47,14 +47,15 @@ timestamp=$(date +%d.%m_%H%M)
 COUNTER=1
 THREADS=40
 SCAN_HEADER="github.com/dreizehnutters/vide"
-NMAP_PATH="$PROJECT_DIR/nmap"
 [[ -n $OUT_DIR ]] && PROJECT_DIR=$OUT_DIR || echo OUT_DIR=$PROJECT_DIR
 WORK_DIR="$PROJECT_DIR/vide_$timestamp"
+TMP_DIR="$PROJECT_DIR/tmp"
+mkdir -p $TMP_DIR
 WS_FILE="$WORK_DIR/webservers.txt"
 HTTPS_SERVERS="$WORK_DIR/https_servers.txt"
 HTTP_SERVERS="$WORK_DIR/http_server.txt"
-CANDIDATES_FILE="$NMAP_PATH/host_port.txt"
-NMAP_PARSE="$NMAP_PATH/parsed.txt"
+CANDIDATES_FILE="$WORK_DIR/host_port.txt"
+NMAP_PARSE="$TMP_DIR/parsed.txt"
 printf "${OP}${BD}working${RST} in $WORK_DIR\n"
 mkdir -p "$WORK_DIR"
 
@@ -70,16 +71,13 @@ WA_JSON="$HOME/tools/technologies.json" #CHANGE ME
 WA_DIR="$WORK_DIR/webanalyze"
 [ -n "$DO_WA" ]         && mkdir -p "$WA_DIR"
 
-
 # ---= 40X =---
 BYP4_DIR="$WORK_DIR/bypass40X"
 [ -n "$DO_404" ]         && mkdir -p "$BYP4_DIR"
 
-
 # ---= nmap =---
 NMAP_DIR="$WORK_DIR/nmap_scripts"
 [ -n "$DO_NMAP" ]         && mkdir -p "$NMAP_DIR"
-
 
 # ---= nikto =---
 NIKTO_TUNING="-Tuning x567"
@@ -91,13 +89,11 @@ SS_TIMEOUT=50
 SCREEN_DIR="$WORK_DIR/screens"
 [ -n "$DO_SCREENSHOTS" ]  && mkdir -p "$SCREEN_DIR"
 
-
 # ---= httpX =---
 RATE_LIMIT=100
 HTTPX_DIR="$WORK_DIR/httpx"
 HTTPX_LOG="$HTTPX_DIR/scan.log"
 [[ -z "$DO_NMAP" || $NUM_FLAGS -gt 1 ]] && mkdir -p "$HTTPX_DIR"
-
 
 # ---= whatweb =---
 WHATWEB_LEVEL=3
@@ -105,18 +101,15 @@ CUSTOM_HEADER="TMP:"
 WW_DIR="$WORK_DIR/whatweb"
 [ -n "$DO_WHATWEB" ]      && mkdir -p "$WW_DIR"
 
-
 # ---= nuclei =---
 NUCLEI_DIR="$WORK_DIR/nuclei"
 NUCLEI_TEMPLATES="$HOME/tools/nuclei-templates" #CHANGE ME
-
 
 # ---= ffuf =---
 FFUF_DIR="$WORK_DIR/ffuf"
 WORDLIST="/opt/goto.wordlist" #CHANGE ME
 [ -n "$DO_FFUF" ]         && mkdir -p "$FFUF_DIR"
 
-
-# ---= katana =---
-KATANA_DIR="$WORK_DIR/katana"
-[ -n "$DO_KATANA" ]       && mkdir -p "$KATANA_DIR"
+# ---= SUBJS =---
+SUBJS_DIR="$WORK_DIR/SUBJS"
+[ -n "$DO_SUBJS" ]       && mkdir -p "$SUBJS_DIR"

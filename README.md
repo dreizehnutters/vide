@@ -19,35 +19,46 @@ This is yet another ctf/engagement automation tool, born out of curiosity and bo
 
 ## Usage
 
+```txt
+Usage: vide.sh input [mods] [options] [misc]
+
+Required:
+    input   Specify an input format (e.g., file/path, string or stdin)
+
+Mods:
+    -sp     Skip probing with httpx
+    -sc     Skip crawling with katana
+
+Options:
+    -es     Enable screenshot
+    -ew     Enable whatweb scans
+    -ea     Enable wanalyze scans
+    -en     Enable nmap script scans
+    -eu     Enable nuclei scans
+    -ei     Enable nikto scans
+    -ef     Enable ffuf brute forcing
+    -ej     Enable js crawl
+    -eb     Enable bypass scans
+    --all   Enable all modules
+
+Misc:
+    -h|--help                  Show this message
+    -c|--config <config.sh>    Config file to pass (default: custom.sh)
+    -o|--out-dir <path>        Out-dir to work in (default: /home/kali/fool)
+    --verify                   Check configuration file (default: config.sh)
+
+Example:
+    vide.sh scope.txt --all
+    vide.sh ./nmap -en -ew -sc --out-dir audit/XYZ
+    echo example.com | vide.sh -sp -es --config custom.sh
+    vide.sh --verify
+```
+
+## Example
+
 ```bash
-$ nmap <options> <target> -oA target/nmap/init
-[...]
+vide.sh scope.txt --all
 
-$ tree target 
-target
-└── nmap
-    ├── init.gnmap
-    ├── init.nmap
-    └── init.xml
-
-$ vide.sh -h
-usage: vide.sh -d <path to directory with folder called 'nmap'>
-        [-h]                       show this message
-        [-wh]                      enable Whhatweb scans
-        [-wa]                      enable Wabanalyze scans
-        [-nm]                      enable nmap script scans
-        [-nu]                      enable Nuclei scans
-        [-ni]                      enable Nikto scans
-        [-ff]                      enable ffuf brute forcing
-        [-sc]                      enable screenshotting
-        [-ka]                      enable katana crwal
-        [-by]                      enable bypass (40X) scans
-        [-p <path to webservers>]  pass list of servers to process {<PROTO>://<IP>[:<PORT>]}
-        [-c <path to config>]      config file to use (default: config.sh)
-        [--check]                  verify configuration file (default: config.sh)
-
-
-$ vide.sh -d target -wh -wa -nu -ni -ff -sc -ka -by
 [...]
 
 $ tree target
