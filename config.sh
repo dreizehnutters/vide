@@ -16,28 +16,29 @@ KATANA=$HOME/.pdtm/go/bin/katana
 
 # ---= check =---
 if [ -n "$CHECK" ]; then
- 	GIT_REL="$(git log --format='%h %ci' -1 2>/dev/null | awk '{ print $1" "$2" "$3 }')"
+ 	GIT_REL="$(git --git-dir $SCRIPTPATH/.git log --format='%h %ci' -1 2>/dev/null | awk '{ print "#"$1 }')"
 	printf "running build ${BD}$GIT_REL${RST}\n"
 	SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-	printf "checking config: $SCRIPTPATH/config.sh\n"
+	printf "checking config: '$SCRIPTPATH/config.sh'\n"
 	# ---= path =---
-	if [  -n "$HOME" ];			then printf "${OP}${BD}HOME${RST}	is set to '$HOME'\n"; 		else printf "${EP}${BD}HOME${RST} not exported.\n"; fi
-	if [  -n "$GO_PATH" ];		then printf "${OP}${BD}GO_PATH${RST}	is set to '$GO_PATH'\n"; 	else printf "${EP}${BD}GO_PATH${RST} not exported.\n"; fi
+	if [  -n "$HOME" ];			then printf "${OP}${BD}HOME${RST}	is set to '$HOME'\n"; 		else printf "${EP}${BD}HOME${RST} not exported\n"; fi
+	if [  -n "$GO_PATH" ];		then printf "${OP}${BD}GO_PATH${RST}	is set to '$GO_PATH'\n"; 	else printf "${EP}${BD}GO_PATH${RST} not exported\n"; fi
 	printf -- '-%.0s' {1..35}; printf "\n"
 	# ---= bins =---
-	if [  -f "$NMAP" ];			then printf "${OP}${BD}nmap${RST}	is installed.\n"; 		else printf "${EP}${BD}nmap${RST}	not found under: $NMAP\n"; fi
-	if [  -f "$XMLS" ];			then printf "${OP}${BD}xmlstarlet${RST}	is installed.\n"; 	else printf "${EP}${BD}xmlstarlet${RST}	not found under: $XMLS\n"; fi
-	if [  -f "$NIKTO" ];		then printf "${OP}${BD}nikto${RST}	is installed.\n"; 		else printf "${EP}${BD}nikto${RST}	not found under: $NIKTO\n"; fi
-	if [  -f "$WW" ];			then printf "${OP}${BD}WhatWeb${RST}	is installed.\n"; 	else printf "${EP}${BD}WhatWeb${RST}	not found under: $WW\n"; fi
-	if [  -f "$GVV" ];			then printf "${OP}${BD}goverview${RST}	is installed.\n"; 	else printf "${EP}${BD}goverview${RST}	not found under: $GVV\n"; fi
-	if [  -f "$FFUF" ];			then printf "${OP}${BD}ffuf${RST}	is installed.\n"; 		else printf "${EP}${BD}ffuf${RST}	not found under: $FFUF\n"; fi
-	if [  -f "$BYP4" ];			then printf "${OP}${BD}byp4xx${RST}	is installed.\n"; 		else printf "${EP}${BD}byp4xx${RST}	not found under: $BYP4\n"; fi
-	if [  -f "$SUBJS" ];		then printf "${OP}${BD}subjs${RST}	is installed.\n"; 		else printf "${EP}${BD}subjs${RST}	not found under: $SUBJS\n"; fi
-	if [  -f "$HTTPX" ];		then printf "${OP}${BD}httpx${RST}	is installed.\n"; 		else printf "${EP}${BD}httpx${RST}	not found under: $HTTPX\n"; fi
-	if [  -f "$NUCLEI" ];		then printf "${OP}${BD}nuclei${RST}	is installed.\n"; 		else printf "${EP}${BD}nuclei${RST}	not found under: $NUCLEI\n"; fi
-	if [  -f "$KATANA" ];		then printf "${OP}${BD}katana${RST}	is installed.\n"; 		else printf "${EP}${BD}katana${RST}	not found under: $KATANA\n"; fi
-	if [  -f "$SMBMAP" ];		then printf "${OP}${BD}smbmap${RST}	is installed.\n"; 		else printf "${EP}${BD}smbmap${RST}	not found under: $SMBMAP\n"; fi
-	if [  -f "$ENUM4LINUX" ];	then printf "${OP}${BD}enum4linux${RST}	is installed.\n"; 		else printf "${EP}${BD}enum4linux-ng${RST}	not found under: $ENUM4LINUX\n"; fi
+	if [  -f "$NMAP" ];			then printf "${OP}${BD}nmap${RST}	is installed\n"; 		else printf "${EP}${BD}nmap${RST}	not found under: $NMAP\n"; fi
+	if [  -f "$XMLS" ];			then printf "${OP}${BD}xmlstarlet${RST}	is installed\n"; 	else printf "${EP}${BD}xmlstarlet${RST}	not found under: $XMLS\n"; fi
+	if [  -f "$NIKTO" ];		then printf "${OP}${BD}nikto${RST}	is installed\n"; 		else printf "${EP}${BD}nikto${RST}	not found under: $NIKTO\n"; fi
+	if [  -f "$WW" ];			then printf "${OP}${BD}WhatWeb${RST}	is installed\n"; 	else printf "${EP}${BD}WhatWeb${RST}	not found under: $WW\n"; fi
+	if [  -f "$GVV" ];			then printf "${OP}${BD}goverview${RST}	is installed\n"; 	else printf "${EP}${BD}goverview${RST}	not found under: $GVV\n"; fi
+	if [  -f "$FFUF" ];			then printf "${OP}${BD}ffuf${RST}	is installed\n"; 		else printf "${EP}${BD}ffuf${RST}	not found under: $FFUF\n"; fi
+	if [  -f "$BYP4" ];			then printf "${OP}${BD}byp4xx${RST}	is installed\n"; 		else printf "${EP}${BD}byp4xx${RST}	not found under: $BYP4\n"; fi
+	if [  -f "$SUBJS" ];		then printf "${OP}${BD}subjs${RST}	is installed\n"; 		else printf "${EP}${BD}subjs${RST}	not found under: $SUBJS\n"; fi
+	if [  -f "$HTTPX" ];		then printf "${OP}${BD}httpx${RST}	is installed\n"; 		else printf "${EP}${BD}httpx${RST}	not found under: $HTTPX\n"; fi
+	if [  -f "$NUCLEI" ];		then printf "${OP}${BD}nuclei${RST}	is installed\n"; 		else printf "${EP}${BD}nuclei${RST}	not found under: $NUCLEI\n"; fi
+	if [  -f "$KATANA" ];		then printf "${OP}${BD}katana${RST}	is installed\n"; 		else printf "${EP}${BD}katana${RST}	not found under: $KATANA\n"; fi
+	if [  -f "$SMBMAP" ];		then printf "${OP}${BD}smbmap${RST}	is installed\n"; 		else printf "${EP}${BD}smbmap${RST}	not found under: $SMBMAP\n"; fi
+	if [  -f "$ENUM4LINUX" ];	then printf "${OP}${BD}enum4linux${RST}	is installed\n"; 	else printf "${EP}${BD}enum4linux-ng${RST}	not found under: $ENUM4LINUX\n"; fi
+	rm -rf $WORK_DIR
 	exit 0
 fi
 
