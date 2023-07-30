@@ -108,7 +108,7 @@ NUCLEI_TEMPLATES="$HOME/tools/nuclei-templates" #CHANGE ME
 
 # ---= ffuf =---
 FFUF_DIR="$WORK_DIR/ffuf"
-WORDLIST="$SCRIPTPATH/goto.wordlist" #CHANGE ME
+WORDLIST="$SCRIPTPATH/misc/vide.list" #CHANGE ME
 METHODS=$TMP_DIR/methods.txt
 EXTENSIONS=".php,.html,.aspx,.asp,.cgi,.jsp"
 FFUF_OUTFORMAT="json"
