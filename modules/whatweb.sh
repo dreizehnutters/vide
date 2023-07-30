@@ -14,4 +14,8 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
 done
 # epilog
 for x in brief deep; do find "$WW_DIR" -type f -name "${x}.log" -exec cat {} >>"$WW_DIR/${x}_all.log" +;done
+NEW_TARGETS=$(cat "$WW_DIR/deep_all.log"| grep -oP "RedirectLocation\[(.*)\]" | cut -d '[' -f2- | cut -d ']' -f1 | sort -u)
+cat $TARGETS_FILE
+echo $NEW_TARGETS >> $TARGETS_FILE
+sed '/^[[:space:]]*$/d' $TARGETS_FILE
 COUNTER=1

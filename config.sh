@@ -43,23 +43,23 @@ if [ -n "$CHECK" ]; then
 fi
 
 # ---= config =---
-VERSION=2.0
+VERSION=2.1
 timestamp=$(date +%d.%m_%H%M)
 COUNTER=1
 THREADS=40
 SCAN_HEADER="github.com/dreizehnutters/vide"
 [[ -n $OUT_DIR ]] && PROJECT_DIR=$OUT_DIR || echo OUT_DIR=$PROJECT_DIR
 WORK_DIR="$PROJECT_DIR/vide_$timestamp"
-TMP_DIR="$PROJECT_DIR/tmp"
+TMP_DIR="$WORK_DIR/tmp"
+mkdir -p $WORK_DIR
 mkdir -p $TMP_DIR
-WS_FILE="$WORK_DIR/webservers.txt"
+WS_FILE="$WORK_DIR/vide_targets.txt"
+TARGETS_FILE=$WS_FILE
 HTTPS_SERVERS="$WORK_DIR/https_servers.txt"
 HTTP_SERVERS="$WORK_DIR/http_server.txt"
 CANDIDATES_FILE="$WORK_DIR/host_port.txt"
-NMAP_PARSE="$TMP_DIR/parsed.txt"
+NMAP_PARSE="$TMP_DIR/vide_parsed.txt"
 printf "${OP}${BD}working${RST} in $WORK_DIR\n"
-mkdir -p "$WORK_DIR"
-
 
 # ---= template =---
 TEMPLATE_DIR="$WORK_DIR/template"
@@ -94,7 +94,7 @@ SCREEN_DIR="$WORK_DIR/screens"
 RATE_LIMIT=100
 HTTPX_DIR="$WORK_DIR/httpx"
 HTTPX_LOG="$HTTPX_DIR/scan.log"
-[[ -z "$DO_NMAP" || $NUM_FLAGS -gt 1 ]] && mkdir -p "$HTTPX_DIR"
+[ -n "$DO_HTTPX" ] && mkdir -p "$HTTPX_DIR"
 
 # ---= whatweb =---
 WHATWEB_LEVEL=3
@@ -108,9 +108,13 @@ NUCLEI_TEMPLATES="$HOME/tools/nuclei-templates" #CHANGE ME
 
 # ---= ffuf =---
 FFUF_DIR="$WORK_DIR/ffuf"
-WORDLIST="/opt/goto.wordlist" #CHANGE ME
+WORDLIST="$SCRIPTPATH/goto.wordlist" #CHANGE ME
+METHODS=$TMP_DIR/methods.txt
+EXTENSIONS=".php,.html,.aspx,.asp,.cgi,.jsp"
+FFUF_OUTFORMAT="json"
+echo -e "GET\nPOST" > $METHODS
 [ -n "$DO_FFUF" ]         && mkdir -p "$FFUF_DIR"
 
 # ---= SUBJS =---
-SUBJS_DIR="$WORK_DIR/SUBJS"
+SUBJS_DIR="$WORK_DIR/subjs"
 [ -n "$DO_SUBJS" ]       && mkdir -p "$SUBJS_DIR"

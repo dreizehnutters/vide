@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
 SCRIPTPATH="$(dirname $(realpath "$0"))"
-
 [[ -f "$SCRIPTPATH/colors.sh" ]] && . "$SCRIPTPATH/colors.sh" || { printf "'$SCRIPTPATH/colors.sh' could not be located\n"; exit 1; }
 
-OUT_DIR="$PWD"
-CMD_LOG="vide.log"
-echo -e "[$(date +%d.%m:%H%M)]\t$(basename "$0") $@" >> "$CMD_LOG"
+# ---= utils =---
+trap ctrl_c INT
+function ctrl_c() {
+    printf "${EP}skipping current module\n"
+}
+
+function log() {
+    CMD_LOG="vide.log"
+    echo -e "[$(date +%d.%m:%H%M)]\t$(basename "$0") $@" >> "$CMD_LOG"
+}
 
 function display_help() {
     printf "\
@@ -45,20 +51,33 @@ ${IN}Example:${RST}
     exit 1
 }
 
-# ---= utils =---
 function cleanUp() {
     rm -rf $TMP_DIR
     rm -rf /tmp/katana*
     rm -rf /tmp/httpx*
     rm -rf /tmp/nuclei*
     rm -rf $STDIN_HANDLE
-    exit 0  
 }
 
 function error() {
     printf "${EP}Error: $1\n\n"
     display_help
     exit 1
+}
+
+function print_banner() {
+    VS=${BD}${GN}${VERSION}${RST}
+    printf "\
+        _______________
+    $BD==c(___(o(______(_()$RST
+              \=\\
+               )=\\    ┌──────────────────────────$IN~vide~$RST───┐
+              //|\\\\\   │ attack surface enumeration        │
+             //|| \\\\\  │ version: $VS                      │
+            // ||. \\\\\ └──────────────────@dreizehnutters──┘
+          .//  ||   \\\\\ .
+          //  .      \\\\\ \n\n"
+    unset VS
 }
 
 function handle_input() {
@@ -81,48 +100,75 @@ function handle_input() {
 }
 
 function parse() {
-    PROTO=$(echo "$1" | cut -d ':' -f1)
-    TMP_TARGET=$(echo "$1" | cut -d '/' -f3-)
-    IP=$(echo "$TMP_TARGET" | cut -d ':' -f1)
     FILE_NAME=$(echo "$TMP_TARGET" | tr ':' '_' | tr '/' '_')
-    if [[ $PROTO == "https"* ]]; then
-        TMP=$(echo "$1" | cut -d':' -f3-)
-        PORT="${TMP:-443}"
-        DO_SSL="true"
+    PROTO="https"
+    if [[ "$1" == *':'* ]]; then
+        [[ "$1" == *'//'* ]] && PROTO=$(echo "$1" | cut -d ':' -f1)
+        TMP_TARGET=$(echo "$1" | cut -d '/' -f3-)
+        IP=$(echo "$TMP_TARGET" | cut -d ':' -f1)
+        if [[ $PROTO == "https"* ]]; then
+            TMP=$(echo "$1" | cut -d':' -f3-)
+            PORT="${TMP:-443}"
+            DO_SSL="true"
+        else
+            unset DO_SSL
+            TMP=$(echo "$1" | cut -d':' -f3-)
+            PORT="${TMP:-80}"
+        fi
+        REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
     else
-        TMP=$(echo "$1" | cut -d':' -f3-)
-        PORT="${TMP:-80}"
+        printf "${QP}no protocol handler found defaulting to $PROTO\n"
+        DO_SSL="true"
+        PORT=0
+        IP=$1
+        REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
     fi
-    REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
 }
 
 function dissect() {
-    DELIM='#'
-    IP=$(echo $1 | cut -d  $DELIM -f1)
-    PORT=$(echo $1 | cut -d  $DELIM -f2)
-    CONF=$(echo $1 | cut -d  $DELIM -f3)
-    SVC=$(echo $1 | cut -d  $DELIM -f4-)
-    [ -z "$CONF" ] && CONF=0
-    [ -z "$SVC" ] && SVC="?"
-    REPLY=($IP $PORT $CONF $SVC)
+    if [[ "$1" == *'#'* ]]; then
+        DELIM='#'
+        IP=$(echo $1 | cut -d  $DELIM -f1)
+        PORT=$(echo $1 | cut -d  $DELIM -f2)
+        CONF=$(echo $1 | cut -d  $DELIM -f3)
+        SVC=$(echo $1 | cut -d  $DELIM -f4-)
+        [ -z "$CONF" ] && CONF=0
+        [ -z "$SVC" ] && SVC="?"
+        REPLY=($IP $PORT $CONF $SVC)
+    else
+        CONF=10
+        parse $1
+        SVC=$PROTO
+        REPLY=($IP $PORT $CONF $SVC)
+fi
 }
 
 function l2() {
-    printf "\t$YL[$COUNTER/$CANDIDATES] $RST$BD$1$RST $TARGET\n"
+    printf "\t$YL[$COUNTER/$NUM_WS] $RST$BD$1$RST $TARGET\n"
 }
 
 function exec_modules() {
+    NUM_FLAGS="$(set | grep -i "DO_" | tr ' ' '\n' | grep true | wc -l)"
+    [[ "$NUM_FLAGS" -gt 1 ]] && printf "${OP}running modules against targets$RST\n" || { printf "${QP}no modules are active\n"; exit 1;  }
     [[ -n "$DO_SCREENSHOTS" ]]  && . $MODULE_PATH/screenshot.sh
     [[ -n "$DO_WHATWEB" ]]      && . $MODULE_PATH/whatweb.sh
+    [[ -n "$DO_WA" ]]           && . $MODULE_PATH/webanalyze.sh
     [[ -n "$DO_NUCLEI" ]]       && . $MODULE_PATH/nuclei.sh
     [[ -n "$DO_NIKTO" ]]        && . $MODULE_PATH/nikto.sh
     [[ -n "$DO_FFUF" ]]         && . $MODULE_PATH/ffuf.sh
     [[ -n "$DO_SUBJS" ]]        && . $MODULE_PATH/subjs.sh
-    [[ -n "$DO_WA" ]]           && . $MODULE_PATH/webanalyze.sh
     [[ -n "$DO_404" ]]          && . $MODULE_PATH/bypass40X.sh
     [[ -n "$DO_NMAP" ]]         && . $MODULE_PATH/nmap.sh
+    printf "${MP}enjoy$RST\n"
 }
 
+function run_modules (){
+    [[ -n $TARGETS_FILE ]] && NUM_WS=$(wc -l "$TARGETS_FILE" | cut -d' ' -f1) || { TARGETS_FILE=$CANDIDATES_FILE; NUM_WS=$(wc -l "$TARGETS_FILE" | cut -d' ' -f1); }
+    exec_modules
+}
+
+# --= argument parser =--
+OUT_DIR="$PWD"
 DO_HTTPX="true"
 DO_CRAWL="true"
 if [[ $# -gt 0 ]]; then
@@ -134,12 +180,12 @@ while [[ $# -gt 0 ]]; do
         -ew) DO_WHATWEB="true" ;;
         -ea) DO_WA="true" ;;
         -eu) DO_NUCLEI="true" ;;
-        -ef) DO_NIKTO="true" ;;
+        -ei) DO_NIKTO="true" ;;
         -ef) DO_FFUF="true" ;;
         -ej) DO_SUBJS="true" ;;
         -eb) DO_404="true" ;;
         -en) DO_NMAP="true" ;;
-        --all) declare DO_{SCREENSHOTS,WHATWEB,DO_WA,NUCLEI,NIKTO,FFUF,SUBJS,NMAP,404}="true";;
+        --all) declare DO_{SCREENSHOTS,WHATWEB,WA,NUCLEI,NIKTO,FFUF,SUBJS,NMAP,404}="true";;
         -c|--config)
             USE_CC="true"
             CUSTOM_CONFIG="$2"
@@ -184,7 +230,7 @@ fi
 if [[ -n $RUNNING_CONFIG ]]; then
     . "${RUNNING_CONFIG}"
 else
-    printf "${EP}no config loaded (config.sh not found in current directory)\n"
+    printf "${EP}no config loaded ('config.sh' not found in '$(echo $SCRIPTPATH)/')\n"
     exit 1
 fi
 if [ -n "$CHECK_INSTALL" ]; then
@@ -193,26 +239,15 @@ if [ -n "$CHECK_INSTALL" ]; then
     . $RUNNING_CONFIG
 fi
 
-if $SHOW_BANNER; then
-VS=${BD}${GN}${VERSION}${RST}
-printf "\
-      _______________
-  $BD==c(___(o(______(_()$RST
-          \=\\
-           )=\\    ┌─────────────────────────$IN~vide~$RST────┐
-          //|\\\\\   │ high-level web server enumeration │
-         //|| \\\\\  │ version: $VS                      │
-        // ||. \\\\\ └─────────────────@dreizehnutters───┘
-      .//  ||   \\\\\ .
-      //  .      \\\\\ \n\n"
-unset VS
-fi
-
 # ---= main =----
+log
+if $SHOW_BANNER; then
+    print_banner
+fi
 if [[ "$IS_DIRECTORY" == "true" ]]; then
     nmap_data="$TMP_DIR/parsed.txt"
-    [[ "$(find $REQUIRED_ARG/*.xml -type f 2>/dev/null | wc -l)" == "0" ]] && { printf "${EP} no .xml data found in $REQUIRED_ARG"; exit 1; }
-    printf "${OP}grepping open ports per host from $REQUIRED_ARG/*.xml$RST\n"
+    [[ "$(find $REQUIRED_ARG/*.xml -type f 2>/dev/null | wc -l)" == "0" ]] && { printf "${EP} no '.xml' data found in '$REQUIRED_ARG'"; exit 1; }
+    printf "${OP}grepping open ports per host from '$REQUIRED_ARG/*.xml'$RST\n"
     $XMLS sel -t -m '//port/state[@state="open"]/parent::port' \
                 -v 'ancestor::host/address[not(@addrtype="mac")][1]/@addr' \
                 -o '#' -v './@portid' -o '#' -v './service/@conf' -o '#' -v './service/@name' \
@@ -231,7 +266,8 @@ fi
 
 CANDIDATES_FILE=$REQUIRED_ARG
 CANDIDATES=$(wc -l "$CANDIDATES_FILE" 2>/dev/null | cut -d' ' -f1)
-[[ "$CANDIDATES" == "0" ]] && { printf "${EP}no open ports found\n"; exit 1; } || printf "${OP}working on $LI$CANDIDATES$RST targets$RST\n"
+# todo: test all cases FIX
+# [[ "$CANDIDATES" == "0" ]] && { printf "${EP}no targets found\n"; exit 1; } || [[ -z "$CANDIDATES" ]] &&{ printf "${EP}no targets found\n"; exit 1; } || printf "${OP}working on $LI$CANDIDATES$RST targets$RST\n"
 if [[ -n "$DO_HTTPX" ]] ; then
     . $MODULE_PATH/httpx.sh
     CANDIDATES_FILE="$TARGETS_FILE"
@@ -240,6 +276,7 @@ if [[ -n "$DO_HTTPX" ]] ; then
 fi
 
 for target in `cat $CANDIDATES_FILE 2>/dev/null`; do
+    rm -f $TMP_DIR/"tmp" 2>/dev/null
     if [[ -n "$DO_CRAWL" ]] ; then
         FILE_NAME=$(echo "$target" | tr ':' '_' | tr '/' '_')
         mkdir -p "$WORK_DIR/crawl"
@@ -249,13 +286,21 @@ for target in `cat $CANDIDATES_FILE 2>/dev/null`; do
             echo "$line" | awk -F'/' 'BEGIN{OFS=FS} {NF=4; print}' | sed '/\.[a-zA-Z]*$/d' >> $TMP_DIR/"tmp"
         done < $WORK_DIR/crawl/${FILE_NAME}_all_routes.txt
         sort -u -V $TMP_DIR/"tmp" > $WORK_DIR/crawl/${FILE_NAME}_d0_routes.txt
-        TARGETS_FILE=$WORK_DIR/crawl/${FILE_NAME}_d0_routes.txt
+        TARGETS_FILE="$WORK_DIR/crawl/${FILE_NAME}_d0_routes.txt"
+    else
+        echo $target >> $TARGETS_FILE
     fi
 done
 
-[[ -n $TARGETS_FILE ]] && NUM_WS=$(wc -l "$TARGETS_FILE" | cut -d' ' -f1) || TARGETS_FILE=$CANDIDATES_FILE
-exec_modules
-NUM_FLAGS="$(set | grep -i "DO_" | tr ' ' '\n' | grep true | wc -l)"
-[[ "$NUM_FLAGS" -gt 1 ]] && printf "${MP}enjoy$RST\n" || { printf "${QP}no modules are active\n"; exit 1;  }
+if [[ -n "$DO_CRAWL" ]]; then
+    touch "$WORK_DIR/crawl/merged.txt"
+    for file in "$WORK_DIR/crawl/"*_d0_routes.txt; do
+        cat "$file" >> "$WORK_DIR/crawl/merged.txt"
+    done
+    TARGETS_FILE="$WORK_DIR/crawl/merged.txt"
+fi
+
+run_modules
 cleanUp
+exit 0
 hope you find some nice bugs (:

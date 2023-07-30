@@ -1,7 +1,7 @@
 # ---= nmap scans =---
 printf "$OP${IN}extened nmap script scans:$RST$RST\n"
-NUM_WS=$(wc -l "$NMAP_PARSE" | cut -d' ' -f1)
-for NMAP_STRING in $(cat $NMAP_PARSE); do
+# NUM_WS=$(wc -l "$TARGETS_FILE" | cut -d' ' -f1)
+for NMAP_STRING in $(cat $TARGETS_FILE); do
     dissect $NMAP_STRING
     if [ "$CONF" -gt 3 ] || [ -n "$FORCE_EXEC" ]; then
         l2 "$IP:$PORT script scanning on: $SVC($CONF)"
