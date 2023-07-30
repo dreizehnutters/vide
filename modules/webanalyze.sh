@@ -8,7 +8,4 @@ NEW_TARGETS=$(cat "$WA_DIR/overview.csv" | tail -n+2 |cut -d ',' -f1 | sort -u |
     cat $TARGETS_FILE
 echo $NEW_TARGETS >> $TARGETS_FILE
 sed '/^[[:space:]]*$/d' $TARGETS_FILE
-# sort -o $TARGETS_FILE $TARGETS_FILE
-echo "----"
-cat $TARGETS_FILE
-echo "----"
+sort -u -o $TARGETS_FILE $TARGETS_FILE

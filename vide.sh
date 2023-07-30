@@ -266,8 +266,6 @@ fi
 
 CANDIDATES_FILE=$REQUIRED_ARG
 CANDIDATES=$(wc -l "$CANDIDATES_FILE" 2>/dev/null | cut -d' ' -f1)
-# todo: test all cases FIX
-# [[ "$CANDIDATES" == "0" ]] && { printf "${EP}no targets found\n"; exit 1; } || [[ -z "$CANDIDATES" ]] &&{ printf "${EP}no targets found\n"; exit 1; } || printf "${OP}working on $LI$CANDIDATES$RST targets$RST\n"
 if [[ -n "$DO_HTTPX" ]] ; then
     . $MODULE_PATH/httpx.sh
     CANDIDATES_FILE="$TARGETS_FILE"
