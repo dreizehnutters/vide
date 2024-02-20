@@ -117,7 +117,6 @@ WW=/usr/bin/whatweb
 WA=/usr/local/bin/webanalyze
 SMBMAP=/usr/bin/smbmap
 ENUM4LINUX=$PY_PATH/enum4linux-ng.py
-GVV=$GO_PATH/bin/goverview
 FFUF=$GO_PATH/bin/ffuf
 BYP4=$GO_PATH/bin/byp4xx
 SUBJS=$GO_PATH/bin/subjs
@@ -137,7 +136,6 @@ $ vide.sh --verify
 - `xmlstarlet` >= `1.6.1` [used for XML parsing](https://xmlstar.sourceforge.net)
 - `httpx` >= `1.2.5` 	[used for server probing](https://github.com/projectdiscovery/httpx)
 - `katana` >= `1.0.0`   [used for crwaling](https://github.com/projectdiscovery/katana)
-- `goverview` >= `1.0.1`	[used for taking screenshots](https://github.com/j3ssie/goverview)
 - `whatweb` >= `0.5.5`	[used for tech discovery ](https://github.com/urbanadventurer/WhatWeb)
 - `webanalyze` >= `0.3.8`	[used for tech discovery](https://github.com/rverton/webanalyze)
 - `nuclei` >= `2.8.9` 	[used for web server scanning](https://github.com/projectdiscovery/nuclei)

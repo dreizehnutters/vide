@@ -9,6 +9,9 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
         SSL_FLAG="-nossl"
     echo "n" | $NIKTO -host "$TARGET" $NIKTO_TUNING -no404 "$SSL_FLAG" -Format htm -output "$NIKTO_DIR/$FILE_NAME.html"
     fi
+    log $cmd
+    $cmd
+    unset cmd
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
 # epilog

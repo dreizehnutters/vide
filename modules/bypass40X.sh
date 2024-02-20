@@ -6,7 +6,9 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
     l2 ""
 
     $BYP4 --all $TARGET | tee "$BYP4_DIR/$PROTO/${FILE_NAME}.txt"
-
+    log $cmd
+    $cmd
+    unset cmd
     let COUNTER++
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done

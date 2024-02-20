@@ -6,6 +6,9 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
     # vvvvvv
     # do stuff here
     # ^^^^^^
+    log $cmd
+    $cmd
+    unset cmd
     let COUNTER++
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done

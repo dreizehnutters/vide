@@ -9,6 +9,9 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
          | sort -u > "$KATANA_DIR/$FILE_NAME.txt"
 
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
+    log $cmd
+    $cmd
+    unset cmd
     let COUNTER++
 done
 # epilog

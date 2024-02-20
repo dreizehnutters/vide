@@ -4,7 +4,10 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
     parse $TARGET
     l2
     [[ "$PORT" -gt 0 ]] && scope="$IP:$PORT" || scope="$TARGET"
-    echo ""| $FFUF -X METHOD -u "$PROTO://$scope/FUZZ" -w "$METHODS":METHOD,"$WORDLIST":FUZZ -ac -c -e $EXTENSIONS -t "$THREADS" -of $FFUF_OUTFORMAT -o "$FFUF_DIR/$FILE_NAME.$FFUF_OUTFORMAT"
+    echo "" | $FFUF -X METHOD -u "$PROTO://$scope/FUZZ" -w "$METHODS":METHOD,"$WORDLIST":FUZZ -ac -c -e $EXTENSIONS -t "$THREADS" -of $FFUF_OUTFORMAT -o "$FFUF_DIR/$FILE_NAME.$FFUF_OUTFORMAT"
+    log $cmd
+    $cmd
+    unset cmd
     unset {PROTO,IP,PORT,FILE_NAME,DO_SSL}
 done
 # epilog

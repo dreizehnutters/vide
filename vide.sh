@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# TODO
+# fix nmap
+# add 404bypass
+
+
 SCRIPTPATH="$(dirname $(realpath "$0"))"
 [[ -f "$SCRIPTPATH/colors.sh" ]] && . "$SCRIPTPATH/colors.sh" || { printf "'$SCRIPTPATH/colors.sh' could not be located\n"; exit 1; }
 
@@ -10,8 +15,7 @@ function ctrl_c() {
 }
 
 function log() {
-    CMD_LOG="vide.log"
-    echo -e "[$(date +%d.%m:%H%M)]\t$(basename "$0") $@" >> "$CMD_LOG"
+    echo -e "[$(date +%d.%m:%H%M)]\t$@" >> "$CMD_LOG"
 }
 
 function display_help() {
@@ -33,6 +37,7 @@ ${IN}Options:${RST}
     -eu     Enable ${UL}nuclei${RST} scans
     -ei     Enable ${UL}nikto${RST} scans
     -ef     Enable ${UL}ffuf${RST} brute forcing
+    -ev     Enable ${UL}virtual host${RST} header fuzzing
     -ej     Enable ${UL}js${RST} crawl
     -eb     Enable ${UL}bypass${RST} scans
     --all   Enable ${UL}all${RST} modules
@@ -71,7 +76,7 @@ function print_banner() {
         _______________
     $BD==c(___(o(______(_()$RST
               \=\\
-               )=\\    ┌──────────────────────────$IN~vide~$RST───┐
+               )=\\    ┌───────────────────────────$IN~vide~$RST──┐
               //|\\\\\   │ attack surface enumeration        │
              //|| \\\\\  │ version: $VS                      │
             // ||. \\\\\ └──────────────────@dreizehnutters──┘
@@ -101,19 +106,21 @@ function handle_input() {
 
 function parse() {
     FILE_NAME=$(echo "$TMP_TARGET" | tr ':' '_' | tr '/' '_')
-    PROTO="https"
+    PROTO="http"
+    PORT=""
     if [[ "$1" == *':'* ]]; then
+        PORT="${TMP:-80}"
         [[ "$1" == *'//'* ]] && PROTO=$(echo "$1" | cut -d ':' -f1)
         TMP_TARGET=$(echo "$1" | cut -d '/' -f3-)
         IP=$(echo "$TMP_TARGET" | cut -d ':' -f1)
         if [[ $PROTO == "https"* ]]; then
             TMP=$(echo "$1" | cut -d':' -f3-)
-            PORT="${TMP:-443}"
+            PORT=$(echo "$1" | rev | cut -d':' -f1 | rev)
             DO_SSL="true"
         else
             unset DO_SSL
+            PORT=$(echo "$1" | rev | cut -d':' -f1 | rev)
             TMP=$(echo "$1" | cut -d':' -f3-)
-            PORT="${TMP:-80}"
         fi
         REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
     else
@@ -138,7 +145,7 @@ function dissect() {
     else
         CONF=10
         parse $1
-        SVC=$PROTO
+        SVC="???"
         REPLY=($IP $PORT $CONF $SVC)
 fi
 }
@@ -156,6 +163,7 @@ function exec_modules() {
     [[ -n "$DO_NUCLEI" ]]       && . $MODULE_PATH/nuclei.sh
     [[ -n "$DO_NIKTO" ]]        && . $MODULE_PATH/nikto.sh
     [[ -n "$DO_FFUF" ]]         && . $MODULE_PATH/ffuf.sh
+    [[ -n "$DO_VIRTUAL" ]]      && . $MODULE_PATH/virtual.sh
     [[ -n "$DO_SUBJS" ]]        && . $MODULE_PATH/subjs.sh
     [[ -n "$DO_404" ]]          && . $MODULE_PATH/bypass40X.sh
     [[ -n "$DO_NMAP" ]]         && . $MODULE_PATH/nmap.sh
@@ -168,7 +176,7 @@ function run_modules (){
 }
 
 # --= argument parser =--
-OUT_DIR="$PWD"
+OUT_DIR="$PWD/vide_runs/"
 DO_HTTPX="true"
 DO_CRAWL="true"
 if [[ $# -gt 0 ]]; then
@@ -182,6 +190,7 @@ while [[ $# -gt 0 ]]; do
         -eu) DO_NUCLEI="true" ;;
         -ei) DO_NIKTO="true" ;;
         -ef) DO_FFUF="true" ;;
+        -ev) DO_VIRTUAL="true" ;;
         -ej) DO_SUBJS="true" ;;
         -eb) DO_404="true" ;;
         -en) DO_NMAP="true" ;;
@@ -240,7 +249,6 @@ if [ -n "$CHECK_INSTALL" ]; then
 fi
 
 # ---= main =----
-log
 if $SHOW_BANNER; then
     print_banner
 fi
@@ -249,9 +257,9 @@ if [[ "$IS_DIRECTORY" == "true" ]]; then
     [[ "$(find $REQUIRED_ARG/*.xml -type f 2>/dev/null | wc -l)" == "0" ]] && { printf "${EP} no '.xml' data found in '$REQUIRED_ARG'"; exit 1; }
     printf "${OP}grepping open ports per host from '$REQUIRED_ARG/*.xml'$RST\n"
     $XMLS sel -t -m '//port/state[@state="open"]/parent::port' \
-                -v 'ancestor::host/address[not(@addrtype="mac")][1]/@addr' \
+                -v 'ancestor::host/hostnames/hostname[@type="PTR"]/@name | ancestor::host/address[@addrtype="ipv4"]/@addr' \
                 -o '#' -v './@portid' -o '#' -v './service/@conf' -o '#' -v './service/@name' \
-                -n "$REQUIRED_ARG"/*.xml 2>/dev/null | sort -u -V > "$nmap_data"
+                -n "$REQUIRED_ARG"/*.xml | grep '#' | sort -u -V > "$nmap_data"
     [[ $? -gt 0 ]] && error "config seems broken"
     sort -t'#' -k3rn $nmap_data | awk -F'#' '!a[$1,$2,$4]++' | sort -V > _tmp
     mv _tmp $nmap_data
@@ -261,11 +269,14 @@ if [[ "$IS_DIRECTORY" == "true" ]]; then
         echo "$IP:$PORT" >> $CANDIDATES_FILE
         unset {IP,PORT,CONF,SVC}
     done
+    sort -u -o $CANDIDATES_FILE $CANDIDATES_FILE
     REQUIRED_ARG=$CANDIDATES_FILE
 fi
 
 CANDIDATES_FILE=$REQUIRED_ARG
 CANDIDATES=$(wc -l "$CANDIDATES_FILE" 2>/dev/null | cut -d' ' -f1)
+# todo: test all cases FIX
+# [[ "$CANDIDATES" == "0" ]] && { printf "${EP}no targets found\n"; exit 1; } || [[ -z "$CANDIDATES" ]] &&{ printf "${EP}no targets found\n"; exit 1; } || printf "${OP}working on $LI$CANDIDATES$RST targets$RST\n"
 if [[ -n "$DO_HTTPX" ]] ; then
     . $MODULE_PATH/httpx.sh
     CANDIDATES_FILE="$TARGETS_FILE"
