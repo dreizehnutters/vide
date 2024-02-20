@@ -12,7 +12,7 @@ Inputs can be:
           \=\
            )=\    ┌─────────────────────────~vide~────┐
           //|\\   │ attack surface enumeration        │
-         //|| \\  │ version: 2.0                      │
+         //|| \\  │ version: 2.2                      │
         // ||. \\ └─────────────────@dreizehnutters───┘
       .//  ||   \\ .
       //  .      \\ 
@@ -98,7 +98,8 @@ The installtion and maintance of used modules by `vide.sh` is left to the user
 ```bash
 $ git clone https://github.com/dreizehnutters/vide
 $ cd vide
-$ ln -s vide.sh ~/.local/bin/vide.sh
+$ ln -s $(pwd)/vide.sh ~/.local/bin/vide.sh
+$ vide.sh --verify
 ```
 
 ---
