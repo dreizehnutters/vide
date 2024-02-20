@@ -9,9 +9,8 @@ ENUM4LINUX=$PY_PATH/enum4linux-ng.py
 FFUF=$GO_PATH/bin/ffuf
 BYP4=$GO_PATH/bin/byp4xx
 SUBJS=$GO_PATH/bin/subjs
-HTTPX=/opt/vide/httpx
+HTTPX=$HOME/.pdtm/go/bin/httpx
 NUCLEI=$HOME/.pdtm/go/bin/nuclei
-NUCLEI=/opt/vide/nuclei
 KATANA=$HOME/.pdtm/go/bin/katana
 
 # ---= check =---

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO
-# fix nmap
+# fix install instruction
 # add 404bypass
 
 
