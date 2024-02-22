@@ -52,7 +52,7 @@ Options:
 Misc:
     -h|--help                  Show this message
     -c|--config  <config.sh>   Config file to pass (default: custom.sh)
-    -o|--out-dir <path>        Out-dir to work in (default: /opt/vide)
+    -o|--out-dir <path>        Out-dir to work in (default: $PWD)
     --verify                   Check configuration file (default: config.sh)
 
 Example:
