@@ -1,18 +1,3 @@
-# ---= bins =--- #CHANGE ME
-NMAP=/usr/bin/nmap
-XMLS=/usr/bin/xmlstarlet
-NIKTO=/usr/bin/nikto
-WW=/usr/bin/whatweb
-WA=/usr/local/bin/webanalyze
-SMBMAP=/usr/bin/smbmap
-ENUM4LINUX=$PY_PATH/enum4linux-ng.py
-FFUF=$GO_PATH/bin/ffuf
-BYP4=$GO_PATH/bin/byp4xx
-SUBJS=$GO_PATH/bin/subjs
-HTTPX=$HOME/.pdtm/go/bin/httpx
-NUCLEI=$HOME/.pdtm/go/bin/nuclei
-KATANA=$HOME/.pdtm/go/bin/katana
-
 # ---= check =---
 if [ -n "$CHECK" ]; then
 	GIT_REL="$(git --git-dir $SCRIPTPATH/.git log --format='%h %ci' -1 2>/dev/null | awk '{ print "#"$1 }')"
@@ -44,6 +29,25 @@ if [ -n "$CHECK" ]; then
 	exit 0
 fi
 
+# ---= template =---
+TEMPLATE_DIR="$WORK_DIR/template"
+[ -n "$DO_TEMPLATE" ] && mkdir -p "$TEMPLATE_DIR"
+
+# ---= bins =--- #CHANGE ME
+NMAP=/usr/bin/nmap
+XMLS=/usr/bin/xmlstarlet
+NIKTO=/usr/bin/nikto
+WW=/usr/bin/whatweb
+WA=/usr/local/bin/webanalyze
+SMBMAP=/usr/bin/smbmap
+ENUM4LINUX=$PY_PATH/enum4linux-ng.py
+FFUF=$GO_PATH/bin/ffuf
+BYP4=$GO_PATH/bin/byp4xx
+SUBJS=$GO_PATH/bin/subjs
+HTTPX=$HOME/.pdtm/go/bin/httpx
+NUCLEI=$HOME/.pdtm/go/bin/nuclei
+KATANA=$HOME/.pdtm/go/bin/katana
+
 # ---= config =---
 VERSION=2.2
 timestamp=$(date +%d.%m_%H%M%s)
@@ -62,11 +66,7 @@ HTTPS_SERVERS="$WORK_DIR/https_servers.txt"
 HTTP_SERVERS="$WORK_DIR/http_servers.txt"
 CANDIDATES_FILE="$WORK_DIR/host_port.txt"
 NMAP_PARSE="$TMP_DIR/vide_parsed.txt"
-printf "${OP}${BD}working${RST} in $WORK_DIR\n"
-
-# ---= template =---
-TEMPLATE_DIR="$WORK_DIR/template"
-[ -n "$DO_TEMPLATE" ] && mkdir -p "$TEMPLATE_DIR"
+printf "${QP}working dir -> '${IL}$WORK_DIR${RST}'\n"
 
 # ---= webanalyze =---
 CRAWL_DEPTH=0
@@ -89,7 +89,7 @@ NIKTO_DIR="$WORK_DIR/nikto"
 
 # ---= screenshots =---
 SS_TIMEOUT=50
-[ -n "$DO_SCREENSHOTS" ] && mkdir -p "$SCREEN_DIR"
+[ -n "$DO_SCREENSHOTS" ]
 
 # ---= httpX =---
 RATE_LIMIT=100

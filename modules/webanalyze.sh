@@ -6,3 +6,5 @@ $WA -hosts "$TARGETS_FILE" -crawl $CRAWL_DEPTH -redirect -silent -apps $WA_JSON 
 log $cmd
 $cmd
 unset cmd
+# epilog
+COUNTER=1

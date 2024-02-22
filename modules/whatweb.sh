@@ -17,3 +17,4 @@ for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
 done
 # epilog
 for x in brief deep; do find "$WW_DIR" -type f -name "${x}.log" -exec cat {} + >>"$WW_DIR/${x}_all.log"; done
+COUNTER=1
