@@ -68,6 +68,10 @@ Example:
 
 ## Example
 
+[![CLI
+demo](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc.svg)](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc?autoplay=1)
+
+
 ```bash
 # skip crawling, do httpX screenshots and WhatWeb scans on nmap -oX data
 $ vide.sh nmap -sc -es -ew
