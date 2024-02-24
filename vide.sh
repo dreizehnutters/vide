@@ -28,7 +28,7 @@ while [[ $# -gt 0 ]]; do
         -ev) DO_VIRTUAL="true" ;;
         -ej) DO_SUBJS="true" ;;
         -eb) DO_404="true" ;;
-        -en) DO_NMAP="true" ;;
+        -en) DO_NMAP="true";unset {DO_CRAWL,DO_HTTPX} ;;
         --all) declare DO_{SCREENSHOTS,WHATWEB,WA,NUCLEI,NIKTO,FFUF,SUBJS,NMAP,404}="true";;
         -c|--config)
             USE_CC="true"
