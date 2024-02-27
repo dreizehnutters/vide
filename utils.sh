@@ -44,6 +44,8 @@ ${IN}Example:${RST}
     $(basename "$BASH_SOURCE") nmap -sc -en -ew
     ${IL}# with config skip probing, do screenshot on stdin (default to HTTP)${RST}
     echo example.com | $(basename "$BASH_SOURCE") -sp -es --config custom.sh
+    ${IL}# ssl scan on target${RST}
+    vide.sh '10.0.13.37:8443' -el
     ${IL}# verify current config.sh${RST}
     $(basename "$BASH_SOURCE") --verify\n"
 }
@@ -98,33 +100,25 @@ function handle_input() {
 }
 
 function parse() {
-    FILE_NAME=$(echo "$TMP_TARGET" | tr ':' '_' | tr '/' '_')
+    unset DO_SSL
     PROTO="http"
     PORT=0
+    IP=$(echo "$1" | cut -d '/' -f3- | cut -d ':' -f1)
     if [[ "$1" == *':'* ]]; then
-        PORT="${TMP:-80}"
-        [[ "$1" == *'//'* ]] && PROTO=$(echo "$1" | cut -d ':' -f1)
-        TMP_TARGET=$(echo "$1" | cut -d '/' -f3-)
-        IP=$(echo "$TMP_TARGET" | cut -d ':' -f1)
-        if [[ $PROTO == "https"* ]]; then
-            TMP=$(echo "$1" | cut -d':' -f3-)
-            PORT="${TMP:-443}"
-            DO_SSL="true"
-        else
-            unset DO_SSL
+        if [[ "$1" == *'://'* ]]; then
+            PROTO=$(echo "$1" | cut -d ':' -f1)
             TMP=$(echo "$1" | cut -d':' -f3-)
             PORT="${TMP:-80}"
+        else
+            printf "${QP}no protocol handler found defaulting to $PROTO\n"
+            PORT=$(echo "$1" | cut -d ':' -f2)
         fi
-        REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
-        unset TMP
+        [[ $PROTO == "https"* ]] && DO_SSL="true"
     else
         printf "${QP}no protocol handler found defaulting to $PROTO\n"
-        DO_SSL="true"
-        PORT=0
-        IP=$1
-        REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
-        unset TMP
     fi
+    FILE_NAME=$PROTO"_"$IP"_"$PORT
+    REPLY=($PROTO $IP $PORT $FILE_NAME $DO_SSL)
 }
 
 function dissect() {
@@ -166,6 +160,7 @@ function exec_modules() {
     [[ -n "$DO_SUBJS" ]] && . $MODULE_PATH/subjs.sh
     [[ -n "$DO_404" ]] && . $MODULE_PATH/bypass40X.sh
     [[ -n "$DO_NMAP" ]] && . $MODULE_PATH/nmap.sh
+    [[ -n "$DO_TESTSSL" ]] && . $MODULE_PATH/ssl.sh
     printf "${MP}enjoy$RST\n"
 }
 

@@ -29,7 +29,7 @@ while [[ $# -gt 0 ]]; do
         -ej) DO_SUBJS="true" ;;
         -eb) DO_404="true" ;;
         -en) DO_NMAP="true";unset {DO_CRAWL,DO_HTTPX} ;;
-        --all) declare DO_{SCREENSHOTS,WHATWEB,WA,NUCLEI,NIKTO,FFUF,SUBJS,NMAP,404}="true";;
+        -el) DO_TESTSSL="true";unset {DO_CRAWL,DO_HTTPX} ;;
         -c|--config)
             USE_CC="true"
             CUSTOM_CONFIG="$2"
