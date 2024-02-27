@@ -1,4 +1,4 @@
-# vide
+# vide.sh
 
 Tool to probe and crawl targets and enumerate their attack surface using varous engines. 
 Inputs can be:
@@ -75,7 +75,6 @@ Example:
 [![CLI
 demo](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc.svg)](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc?autoplay=1)
 
-
 ```bash
 # skip crawling, do httpX screenshots and WhatWeb scans on nmap -oX data
 $ vide.sh nmap -sc -es -ew
@@ -122,7 +121,6 @@ $ cd vide
 $ ln -s $(pwd)/vide.sh ~/.local/bin/vide.sh
 $ vide.sh --verify
 ```
-
 ---
 
 ## Configuration 
@@ -151,21 +149,22 @@ KATANA=$HOME/.pdtm/go/bin/katana
 # check the current configuration
 $ vide.sh --verify
 ```
-
 ---
 
-## Features
-- `xmlstarlet` >= `1.6.1` [used for XML parsing](https://xmlstar.sourceforge.net)
-- `httpx` >= `1.2.5` [used for server probing](https://github.com/projectdiscovery/httpx)
-- `katana` >= `1.0.0` [used for crwaling](https://github.com/projectdiscovery/katana)
-- `whatweb` >= `0.5.5` [used for tech discovery ](https://github.com/urbanadventurer/WhatWeb)
-- `webanalyze` >= `0.3.8` [used for tech discovery](https://github.com/rverton/webanalyze)
-- `nuclei` >= `2.8.9` [used for web server scanning](https://github.com/projectdiscovery/nuclei)
-- `nikto` >= `2.5.0` [used for web server scanning](https://github.com/sullo/nikto)
-- `ffuf` >= `2.0.0` [used for directory brute forcing](https://github.com/ffuf/ffuf)
-- `byp4xx` >= `b337580` [used for bypass checks](https://github.com/lobuhi/byp4xx)
-- `subjs` >= `1.0.0` [used for crawling js](https://github.com/lc/subjs)
-- `enum4linux-ng.py` >= `1.3.1` [used for windows enumeration  ](https://github.com/cddmp/enum4linux-ng)
-- `smbmap` >= `1.9.1` [used for smb enumeration](https://github.com/ShawnDEvans/smbmap)
-- `nmap` >= `7.94` [used for extended script scans](https://github.com/nmap/nmap)
-- `testssl.sh` >= `3.2rc3` [used for SSL scanning script scans](https://testssl.sh/)
+## Scanning Engines
+|Software|Version|Install|
+|-|-|-|
+|`xmlstarlet`| >= `1.6.1`| [XML parsing](https://xmlstar.sourceforge.net)|
+|`httpx`| >= `1.2.5`| [server probing](https://github.com/projectdiscovery/httpx)|
+|`katana`| >= `1.0.0`| [crwaling](https://github.com/projectdiscovery/katana)|
+|`whatweb`| >= `0.5.5`| [tech discovery ](https://github.com/urbanadventurer/WhatWeb)|
+|`webanalyze`| >= `0.3.8`| [tech discovery](https://github.com/rverton/webanalyze)|
+|`nuclei`| >= `2.8.9`| [web server scanning](https://github.com/projectdiscovery/nuclei)|
+|`nikto`| >= `2.5.0`| [web server scanning](https://github.com/sullo/nikto)|
+|`ffuf`| >= `2.0.0`| [directory brute forcing](https://github.com/ffuf/ffuf)|
+|`byp4xx`| >= `b337580`| [bypass checks](https://github.com/lobuhi/byp4xx)|
+|`subjs`| >= `1.0.0`| [crawling js](https://github.com/lc/subjs)|
+|`enum4linux-ng.py`| >= `1.3.1`| [windows enumeration  ](https://github.com/cddmp/enum4linux-ng)|
+|`smbmap`| >= `1.9.1`| [smb enumeration](https://github.com/ShawnDEvans/smbmap)|
+|`nmap`| >= `7.94`| [extended script scans](https://github.com/nmap/nmap)|
+|`testssl.sh`| >= `3.2rc3`| [SSL scanning script scans](https://testssl.sh/)|
