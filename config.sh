@@ -26,13 +26,10 @@ if [ -n "$CHECK" ]; then
 	if [ -f "$SMBMAP" ]; then printf "${OP}${BD}smbmap${RST}		is installed\n"; else printf "${EP}${BD}smbmap${RST}	not found under: $SMBMAP\n"; fi
 	if [ -f "$ENUM4LINUX" ]; then printf "${OP}${BD}enum4linux-ng${RST}	is installed\n"; else printf "${EP}${BD}enum4linux-ng${RST}	not found under: $ENUM4LINUX\n"; fi
 	if [ -f "$TESTSSL" ]; then printf "${OP}${BD}testssl.sh${RST}		is installed\n"; else printf "${EP}${BD}testssl.sh${RST}	not found under: $TESTSSL\n"; fi
+	if [ -f "$SSHAUDIT" ]; then printf "${OP}${BD}ssh-audit${RST}		is installed\n"; else printf "${EP}${BD}ssh-audit${RST}	not found under: $SSHAUDIT\n"; fi
 	rm -rf $WORK_DIR
 	exit 0
 fi
-
-# ---= template =---
-TEMPLATE_DIR="$WORK_DIR/template"
-[ -n "$DO_TEMPLATE" ] && mkdir -p "$TEMPLATE_DIR"
 
 # ---= bins =--- #CHANGE ME (ctrl+f)
 NMAP=/usr/bin/nmap
@@ -49,6 +46,7 @@ HTTPX=$HOME/.pdtm/go/bin/httpx
 NUCLEI=$HOME/.pdtm/go/bin/nuclei
 KATANA=$HOME/.pdtm/go/bin/katana
 TESTSSL=/home/kali/tools/testssl.sh/testssl.sh
+SSHAUDIT=/home/kali/.local/bin/ssh-audit
 
 # ---= config =---
 VERSION=2.2
@@ -69,6 +67,10 @@ HTTP_SERVERS="$WORK_DIR/http_servers.txt"
 CANDIDATES_FILE="$WORK_DIR/host_port.txt"
 NMAP_PARSE="$TMP_DIR/vide_parsed.txt"
 printf "${QP}working dir -> '${IL}$WORK_DIR${RST}'\n"
+
+# ---= template =---
+TEMPLATE_DIR="$WORK_DIR/template"
+[ -n "$DO_TEMPLATE" ] && mkdir -p "$TEMPLATE_DIR"
 
 # ---= webanalyze =---
 CRAWL_DEPTH=0
@@ -124,10 +126,14 @@ SUBJS_DIR="$WORK_DIR/subjs"
 [ -n "$DO_SUBJS" ] && mkdir -p "$SUBJS_DIR"
 
 # ---= TESTSSL =---
-TESTSSL_DIR="$WORK_DIR/TESTSSL"
+TESTSSL_DIR="$WORK_DIR/testssl"
 TESTSSL_TMP="$WORK_DIR/TESTSSL_TMP"
 TESTSSL_ERRORS="$WORK_DIR/error_on_testssl_scan.txt"
-touch $TESTSSL_ERRORS
 TESTSSL_CONFIG="--openssl-timeout 10 -E -p -h -S -P -U --hints --warnings off --mapping no-openssl --logfile $TESTSSL_TMP -oJ $TESTSSL_TMP"
 [ -n "$DO_TESTSSL" ] && mkdir -p "$TESTSSL_DIR"
-mkdir -p "$TESTSSL_DIR"
+[ -n "$DO_TESTSSL" ] && mkdir -p touch $TESTSSL_ERRORS
+
+# ---= SSHAUDIT =---
+SSHAUDIT_DIR="$WORK_DIR/ssh-audit"
+SSHAUDIT_CONFIG=""
+[ -n "$DO_SSHAUDIT" ] && mkdir -p "$SSHAUDIT_DIR"

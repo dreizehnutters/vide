@@ -29,6 +29,8 @@ ${IN}Options:${RST}
     -ev     Enable ${UL}virtual host${RST} header fuzzing
     -ej     Enable ${UL}js${RST} crawl
     -eb     Enable ${UL}bypass${RST} scans
+    -el     Enable ${UL}testssl.sh${RST} scans
+    -eh     Enable ${UL}ssh-audit${RST} scans
     --all   Enable ${UL}all${RST} modules
 
 ${IN}Misc:${RST}
@@ -161,6 +163,7 @@ function exec_modules() {
     [[ -n "$DO_404" ]] && . $MODULE_PATH/bypass40X.sh
     [[ -n "$DO_NMAP" ]] && . $MODULE_PATH/nmap.sh
     [[ -n "$DO_TESTSSL" ]] && . $MODULE_PATH/ssl.sh
+    [[ -n "$DO_SSHAUDIT" ]] && . $MODULE_PATH/ssh.sh
     printf "${MP}enjoy$RST\n"
 }
 

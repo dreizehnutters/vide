@@ -49,7 +49,8 @@ Options:
     -ev     Enable virtual host header fuzzing
     -ej     Enable js crawl
     -eb     Enable bypass scans
-    --all   Enable all modules
+    -el     Enable testssl.sh scans
+    -eh     Enable ssh-audit scans
 
 Misc:
     -h|--help                  Show this message
@@ -167,4 +168,5 @@ $ vide.sh --verify
 |`enum4linux-ng.py`| >= `1.3.1`| [windows enumeration  ](https://github.com/cddmp/enum4linux-ng)|
 |`smbmap`| >= `1.9.1`| [smb enumeration](https://github.com/ShawnDEvans/smbmap)|
 |`nmap`| >= `7.94`| [extended script scans](https://github.com/nmap/nmap)|
-|`testssl.sh`| >= `3.2rc3`| [SSL scanning script scans](https://testssl.sh/)|
+|`testssl.sh`| >= `3.2rc3`| [SSL compliance scans](https://testssl.sh/)|
+|`ssh-audit`| >= `3.1.0`| [SSH compliance scans](https://pypi.org/project/ssh-audit/)|
