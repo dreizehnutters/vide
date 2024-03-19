@@ -6,7 +6,7 @@ if [ -n "$CHECK" ]; then
 		cd "$(dirname "$0")" >/dev/null 2>&1
 		pwd -P
 	)"
-	printf "checking config: '$SCRIPTPATH/config.sh'\n"
+	printf "checking config: '${BASH_SOURCE[0]}'\n"
 	# ---= path =---
 	if [ -n "$HOME" ]; then printf "${OP}${BD}HOME${RST}	is set to '$HOME'\n"; else printf "${EP}${BD}HOME${RST} not exported\n"; fi
 	if [ -n "$GO_PATH" ]; then printf "${OP}${BD}GO_PATH${RST}	is set to '$GO_PATH'\n"; else printf "${EP}${BD}GO_PATH${RST} not exported\n"; fi

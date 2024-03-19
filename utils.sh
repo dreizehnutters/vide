@@ -41,15 +41,15 @@ ${IN}Misc:${RST}
 
 ${IN}Example:${RST}
     ${IL}# skip crawl, skip probing, do virtual host header scan${RST}
-    $(basename "$BASH_SOURCE") scope.txt -sp -sc -ev
+    vide.sh scope.txt -sp -sc -ev
     ${IL}# skip crawl, do nuclei, do whatweb on nmap output directory${RST}
-    $(basename "$BASH_SOURCE") nmap -sc -en -ew
+    vide.sh nmap -sc -en -ew
     ${IL}# with config skip probing, do screenshot on stdin (default to HTTP)${RST}
-    echo example.com | $(basename "$BASH_SOURCE") -sp -es --config custom.sh
+    echo example.com | vide.sh -sp -es --config custom.sh
     ${IL}# ssl scan on target${RST}
     vide.sh '10.0.13.37:8443' -el
     ${IL}# verify current config.sh${RST}
-    $(basename "$BASH_SOURCE") --verify\n"
+    vide.sh --verify\n"
 }
 
 function cleanUp() {
