@@ -74,7 +74,7 @@ Example:
 ## Example
 
 [![CLI
-demo](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc.svg)](https://asciinema.org/a/JiafnV3IX0pn2nShFv7Uqs0Gc?autoplay=1)
+demo](https://miro.medium.com/v2/resize:fit:4800/format:webp/1*37G-LKGZgEAx-0JFcn4fKw.gif)](https://miro.medium.com/v2/resize:fit:4800/format:webp/1*37G-LKGZgEAx-0JFcn4fKw.gif)
 
 ```bash
 # skip crawling, do httpX screenshots and WhatWeb scans on nmap -oX data
