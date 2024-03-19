@@ -2,6 +2,8 @@
 printf "$OP$IN$(basename $BASH_SOURCE):$RST\n"
 for TARGET in $(grep -v "#" "$TARGETS_FILE" | sort -V); do
     parse $TARGET
+    [[ "$PORT" == 0 ]] && PORT=443
+    [[ $PROTO == "https"* ]] && PORT=443
     l2 "testssl.sh scan"
     mkdir -p $TESTSSL_TMP
     $TESTSSL $TESTSSL_CONFIG $IP:$PORT
