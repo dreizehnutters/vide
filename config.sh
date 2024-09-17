@@ -131,7 +131,7 @@ TESTSSL_TMP="$WORK_DIR/TESTSSL_TMP"
 TESTSSL_ERRORS="$WORK_DIR/error_on_testssl_scan.txt"
 TESTSSL_CONFIG="--openssl-timeout 10 -E -p -h -S -P -U --hints --warnings off --mapping no-openssl --logfile $TESTSSL_TMP -oJ $TESTSSL_TMP"
 [ -n "$DO_TESTSSL" ] && mkdir -p "$TESTSSL_DIR"
-[ -n "$DO_TESTSSL" ] && mkdir -p touch $TESTSSL_ERRORS
+[ -n "$DO_TESTSSL" ] && touch $TESTSSL_ERRORS
 
 # ---= SSHAUDIT =---
 SSHAUDIT_DIR="$WORK_DIR/ssh-audit"

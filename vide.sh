@@ -148,6 +148,7 @@ if [[ -n "$DO_CRAWL" ]]; then
     TARGETS_FILE="$WORK_DIR/crawl/merged.txt"
 fi
 
+cleanUp
 run_modules
 cleanUp
 exit 0
